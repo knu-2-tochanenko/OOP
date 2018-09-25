@@ -4,8 +4,6 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 namespace tvv {
 	class IpAddress {
 	private:
@@ -22,6 +20,8 @@ namespace tvv {
 		*	and vice versa
 		*	Parameter is referred to which type it is needed
 		*	to convert IP address
+		*	Result is false, if last 5 octets in IPv6 are not = 0
+		*	and WON'T sync it
 		//*/
 		bool syncAddresses(IPType);
 
@@ -35,8 +35,8 @@ namespace tvv {
 		// TODO make a function which and use arrays
 		IpAddress(unsigned int[]);
 
-		string getIPv4Address();
-		string getIPv6Address();
+		std::string getIPv4Address();
+		std::string getIPv6Address();
 
 		//	Generates random IP address (both IPv4 & IPv6)
 		static IpAddress* generateRandom();

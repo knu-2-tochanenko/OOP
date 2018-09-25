@@ -4,8 +4,6 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 namespace tvv {
 	template <typename TNodeType> class Graph {
 	private:
@@ -21,7 +19,7 @@ namespace tvv {
 		*	listOfEdges will be generated no matter what
 		*	The first element in each subvector is the name of the node
 		//*/
-		vector<vector<TNodeType>> listOfEdges;
+		std::vector<std::vector<TNodeType>> listOfEdges;
 
 		/*	matrixOfEdges will be generated only if user wants to
 		*	DANGER! Slow zone!
@@ -32,21 +30,104 @@ namespace tvv {
 		unsigned int **matrixOfEdges;
 		unsigned int numberOfElements;
 		//	Number of the element in this vector is it's number in the Matrix
-		vector<TNodeType> elementToNumberList;
+		std::vector<TNodeType> elementToNumberList;
 
 		/*
 		*	Returns true if element was added successfully
 		*	Returns false if element exist
 		//*/
-		bool addElementList(TNodeType);
-		bool addElementMatrix(TNodeType);
+		bool addElementList(TNodeType elementToAdd) {
+			unsigned int listSize = listOfEdges.size();
+			//	If the list is empty
+			if (listSize == 0) {
+				listOfEdges.push_back(std::vector<TNodeType>(elementToAdd));
+				return true;
+			}
+
+			//	Search for the existing node
+			for (int vectorIterator = 0; vectorIterator < listSize; vectorIterator++) {
+				if (listOfEdges[vectorIterator][0] == elementToAdd)
+					return false;
+			}
+			listOfEdges.push_back(std::vector<TNodeType>(elementToAdd));
+			return true;
+		}
+		bool addElementMatrix(TNodeType elementToAdd) {
+			//	If the Matrix is empty
+			if (numberOfElements == 0) {
+				matrixOfEdges = new int[1];
+				matrixOfEdges[0] = new int[1];
+				matrixOfEdges[0][0] = 0;
+				elementToNumberList.push_back(elementToAdd);
+				numberOfElements++;
+				return true;
+			}
+
+			//	Search for the existing node
+			for (int vectorIterator = 0; vectorIterator < numberOfElements; vectorIterator++) {
+				if (elementToNumberList[vectorIterator] == elementToAdd)
+					return false;
+			}
+
+			//	If the element is new
+			matrixAddSpaceForElements(1);
+			elementToNumberList.push_back(elementToAdd);
+			numberOfElements++;
+			return true;
+		}
 
 		/*
 		*	Returns true if element was erased successfully
 		*	Returns false if element doen't exist
 		//*/
-		bool eraseElementList(TNodeType);
-		bool eraseElementMatrix(TNodeType);
+		bool eraseElementList(TNodeType elementToErase) {
+			unsigned int listSize = listOfEdges.size();
+			//	If the list is empty
+			if (listSize == 0) {
+				return false;
+			}
+
+			//	Search for the existing node
+			for (int vectorIterator = 0; vectorIterator < listSize; vectorIterator++) {
+				if (listOfEdges[vectorIterator][0] == elementToErase) {
+					int numberOfConnectedNodes = listOfEdges[vectorIterator].size();
+					//	Going through all connected 
+					
+					//	Finding all connected nodes
+					for (int summaryIterator = 0; summaryIterator < listSize; summaryIterator++) {
+						//	TODO Add checking for exact node to delete
+							int numberOfEdges = listOfEdges[summaryIterator].size();
+							for (int curNodesIterator = 1; curNodesIterator < numberOfEdges; numberOfEdges++) {
+								if ([listOfEdges, numberOfConnectedNodes, summaryIterator]() {
+									//	Go through of all connected to elementToErace nodes
+									for (int connectsIterator = 1; connectsIterator < numberOfConnectedNodes; connectsIterator++) {
+										if (listOfEdges[summaryIterator][curNodesIterator] == listOfEdges[vectorIterator][connectsIterator])
+											return true;
+										return false;
+									}
+								}) listOfEdges[summaryIterator].erase(listOfEdges[summaryIterator].begin() + curNodesIterator);
+							}
+						
+					}
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		bool eraseElementMatrix(TNodeType elementToErase) {
+			//	If the Matrix is empty
+			if (numberOfElements == 0)
+				return false;
+
+			//	Search for the existing node
+			for (int vectorIterator = 0; vectorIterator < numberOfElements; vectorIterator++) {
+				if (elementToNumberList[vectorIterator] == elementToErase)
+					return false;
+			}
+
+			return true;
+		}
 
 		/*
 		*	Returns true if all elements are in one connected compnent
