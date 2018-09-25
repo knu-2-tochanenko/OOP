@@ -24,8 +24,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source.cpp" />
-    <ClCompile Include="tgraph.cpp" />
-    <ClCompile Include="tipaddress.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
