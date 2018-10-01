@@ -8,7 +8,7 @@ namespace tvv {
 	template <typename TNodeType> class Graph {
 	private:
 		/*
-		*	Wariable which is used to tell which
+		*	Variable which is used to tell which
 		*	structure we are working with.
 		*	true - List (default value)
 		*	false - matrix
@@ -17,7 +17,7 @@ namespace tvv {
 
 		/*
 		*	listOfEdges will be generated no matter what
-		*	The first element in each subvector is the name of the node
+		*	The first element in each sub vector is the name of the node
 		//*/
 		std::vector<std::vector<TNodeType>> listOfEdges;
 
@@ -70,7 +70,7 @@ namespace tvv {
 			}
 
 			//	If the element is new
-			matrixAddSpaceForElements(1);
+			matrixChangeNumberOfEdges(+1);
 			elementToNumberList.push_back(elementToAdd);
 			numberOfElements++;
 			return true;
@@ -78,7 +78,7 @@ namespace tvv {
 
 		/*
 		*	Returns true if element was erased successfully
-		*	Returns false if element doen't exist
+		*	Returns false if element doesn't exist
 		//*/
 		bool eraseElementList(TNodeType elementToErase) {
 			unsigned int listSize = listOfEdges.size();
@@ -122,15 +122,26 @@ namespace tvv {
 
 			//	Search for the existing node
 			for (int vectorIterator = 0; vectorIterator < numberOfElements; vectorIterator++) {
-				if (elementToNumberList[vectorIterator] == elementToErase)
-					return false;
+				if (elementToNumberList[vectorIterator] == elementToErase) {
+					// Delete connection between number and selected element
+					elementToNumberList.erase(elementToNumberList.begin() + vectorIterator);
+					//	Delete %vectorIterator% row and column
+					for (int columnIterator = 0; columnIterator < numberOfElements; columnIterator++)
+						for (int rowIterator = vectorIterator; rowIterator < numberOfElements - 1; rowIterator++)
+							matrixOfEdges[columnIterator][rowIterator] = matrixOfEdges[columnIterator][rowIterator + 1];
+					for (int rowIterator = 0; rowIterator < numberOfElements; rowIterator++)
+						for (int columnIterator = vectorIterator; columnIterator < numberOfElements - 1; columnIterator++)
+							matrixOfEdges[columnIterator][rowIterator] = matrixOfEdges[columnIterator + 1][rowIterator];
+					matrixChangeNumberOfEdges(-1);
+				}
+				return false;
 			}
 
-			return true;
+			return false;
 		}
 
 		/*
-		*	Returns true if all elements are in one connected compnent
+		*	Returns true if all elements are in one connected component
 		*	false - if not
 		//*/
 		bool checkForConnectivityList();
@@ -164,26 +175,101 @@ namespace tvv {
 		bool generateRandomlist();
 		bool generateRandomMatrix();
 
-		
+		/*
+		*	Functions which are used to export one type
+		*	of saving elements to another
+		//*/
+		bool generateListOfEdges();
 		bool generateMatrixOfedges();
 
 		/*
-		*	Remakes the whole matrix and add %parameter%
-		*	more rows & columns
-		*	Make take some time to use
+		*	Remakes the whole matrix and adds / subtracts % parameter %
+		*	rows & columns
+		*	Make take some time to use.
+		*	Also changes the value of numberOfEdges variable
 		//*/
-		// TODO Make this inccessary if the user wants it. May save some time
-		bool matrixAddSpaceForElements();
+		// TODO Make this unnecessary if the user wants it. May save some time & memory
+		bool matrixChangeNumberOfEdges(int numberToChange) {
+			if (numberToChange == 0)
+				return true;
+			if (numberOfElements == numberToChange) {
+				//	Delete a whole matrix
+				for (int i = 0; i < numberOfElements; i++)
+					delete matrixOfEdges[i];
+				delete matrixOfEdges[];
+
+				numberOfElements = 0;
+			}
+			else if (numberToChange < 0)
+				if (numberOfElements - numberToChange < 0)
+					return false;
+				else {
+					unsigned int **newMatrix;
+					int newNumberOfElements = numberOfElements - numberToChange;
+
+					newMatrix = new *unsigned int[newNumberOfElements];
+					for (int i = 0; i < newNumberOfElements; i++) {
+						newMatrix[i] = new unsigned int[newNumberOfElements];
+						for (int j = 0; j < newNumberOfElements; j++)
+							newMatrix[i][j] = matrixOfEdges[i][j];
+					}
+					//	Delete old matrix
+					for (int i = 0; i < numberOfElements; i++)
+						delete matrixOfEdges[i];
+					delete[] matrixOfEdges;
+					matrixOfEdges = newMatrix;
+
+					numberOfElements = newNumberOfElements;
+				}
+			else {
+				unsigned int **newMatrix;
+				int newNumberOfElements = numberOfElements + numberToChange;
+
+				newMatrix = new *unsigned int[newNumberOfElements];
+				for (int i = 0; i < newNumberOfElements; i++) {
+					newMatrix[i] = new unsigned int[newNumberOfElements];
+					for (int j = 0; j < newNumberOfElements; j++)
+						if ((j < numberOfElements) && (i < numberOfElements))
+							newMatrix[i][j] = matrixOfEdges[i][j];
+						else
+							newMatrix[i][j] = 0;
+				}
+				//	Delete old matrix
+				for (int i = 0; i < numberOfElements; i++)
+					delete matrixOfEdges[i];
+				delete[] matrixOfEdges;
+				matrixOfEdges = newMatrix;
+
+				numberOfElements = newNumberOfElements;
+			}
+			return true;
+		}
 
 		
 
 	public:
-		Graph();
+		Graph() {
+			workType = true;
+		}
 
 		//	Back-end stuff will use Matrix
-		bool workWithMatrix();
+		bool workWithMatrix() {
+			if (workType) {
+				generateMatrixOfedges();
+				workType = false;
+				return true;
+			}
+			return false;
+		}
 		//	Back-end stuff will use List
-		bool workWithList();
+		bool workWithList() {
+			if (!workType) {
+				generateListOfEdges();
+				workType = true;
+				return true;
+			}
+			return false;
+		}
 
 	};
 }
