@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <queue>
 
 namespace tvv {
 	template <typename TNodeType> class Graph {
@@ -144,23 +145,211 @@ namespace tvv {
 		*	Returns true if all elements are in one connected component
 		*	false - if not
 		//*/
-		bool checkForConnectivityList();
-		bool checkForConnectivityMatrix();
+		bool checkForConnectivityList() {
+			unsigned int listSize = listOfEdges.size();
+			int *fathers = new int[listSize];
+			int *length = new int[listSize];
+			bool *used = new bool[listSize];
+
+			breadthFirstSearchForList(0, fathers, length, used);
+
+			for (int i = 0; i < listSize; i++)
+				if (!used)
+					return false;
+			return true;
+		}
+		bool checkForConnectivityMatrix() {
+			int *fathers = new int[numberOfElements];
+			int *length = new int[numberOfElements];
+			bool *used = new bool[numberOfElements];
+
+			breadthFirstSearchForMatrix(0, fathers, length, used);
+
+			for (int i = 0; i < numberOfElements; i++)
+				if (!used)
+					return false;
+			return true;
+		}
+
+		//	Finds a number for specific TNodeType element in list
+		int findNumberInList(TNodeType vertex) {
+			unsigned int listSize = listOfEdges.size();
+			for (int i = 0; i < listSize; i++)
+				if (listOfEdges[i][0] == vertex)
+					return i;
+			return -1;
+		}
+
+		/*
+		*	Breadth-First Search for different formats.
+		*	Makes three different useful arrays
+		//*/
+		bool breadthFirstSearchForList(int vertex, int fathers[], int length[], bool used[]) {
+			std::queue<int> nodes;
+			unsigned int listSize = listOfEdges.size();
+			for (int i = 0; i < listSize; i++) {
+				fathers[i] = 0;
+				length[i] = INT64_MAX;
+				used[i] = false;
+			}
+
+			used[vertex] = true;
+			fathers[vertex] = -1;
+			nodes.push(vertex);
+
+			while (nodes.empty() != true) {
+				int cur_vertex = nodes.front();
+				nodes.pop();
+
+				//	Get list of connected nodes
+				std::vector<TNodeType>::iterator nodeIterator;
+
+				for (nodeIterator = listOfEdges[vertex].begin() + 1; nodeIterator < listOfEdges[i].back(); nodeIterator++) {
+					int findNumber = findNumberInList(nudeIterator);
+					if (findNumber == -1)
+						return false; //	No such element
+					if (used[findNumber] == false) {
+						used[findNumber] = true;
+						nodes.push(findNumber);
+						length[findNumber] = length[cur_vertex] + 1;
+						fathers[findNumber] = cur_vertex;
+					}
+				}
+			}
+			return true;
+		}
+		bool breadthFirstSearchForMatrix(int vertex, int fathers[], int length[], bool used[]) {
+			std::queue<int> nodes;
+			for (int i = 0; i < numberOfElements; i++) {
+				fathers[i] = 0;
+				length[i] = INT64_MAX;
+				used[i] = false;
+			}
+
+			used[vertex] = true;
+			fathers[vertex] = -1;
+			nodes.push(vertex);
+
+			while (nodes.empty() != true) {
+				int curVertex = nodes.front();
+				nodes.pop();
+
+				//	Get list of connected nodes
+				std::vector<TNodeType>::iterator nodeIterator;
+
+				for (int curNode = 0; curNode < numberOfElements; curNode++) {
+					if (matrixOfEdges[curVertex][curNode] != 0)
+						if (used[curNode] == false) {
+							used[curNode] = true;
+							nodes.push(curNode);
+							length[curNode] = length[curVertex] + 1;
+							fathers[curNode] = curVertex;
+						}
+				}
+			}
+			return true;
+		}
 
 		/*
 		*	Returns the minimal length between two elements
 		*	Returns -1 if there is no such way
 		//*/
-		int findMinLengthList(TNodeType, TNodeType);
-		int findMinLengthMatrix(TNodeType, TNodeType);
+		int findMinLengthList(TNodeType firstNode, TNodeType secondNode) {
+			unsigned int listSize = listOfEdges.size();
+			int *fathers = new int[listSize];
+			int *length = new int[listSize];
+			bool *used = new bool[listSize];
+
+			int firstNumber = findNumberInList(firstNode);
+			int secondNumber = findNumberInList(secondNode);
+			if (firstNumber * secondNumber < 0)
+				return -1; //	There is no nodes with firstNode or secondNode values
+
+			breadthFirstSearchForList(firstNumber, fathers, length, used);
+
+			if (length[secondNumber] == INT64_MAX)
+				return -1;
+			else
+				return length[secondNumber];
+			
+		}
+		int findMinLengthMatrix(TNodeType firstNode, TNodeType secondNode) {
+			int *fathers = new int[numberOfElements];
+			int *length = new int[numberOfElements];
+			bool *used = new bool[numberOfElements];
+
+			breadthFirstSearchForMatrix(firstNode, fathers, length, used);
+
+			if (length[secondNode] == INT64_MAX)
+				return -1;
+			else
+				return length[secondNode];
+		}
 
 		/*
 		*	Connects two elements
 		*	Returns false if it is the same element
 		*	ACHTUNG! YOU MAY CHANGE THIS FUNCTION TO ALLOW LOOPS
 		//*/
-		bool connectElementToAnotherElementList(TNodeType, TNodeType);
-		bool connectElementToAnotherElementMatrix(TNodeType, TNodeType);
+		bool connectElementToAnotherElementList(TNodeType firstNode, TNodeType secondNode) {
+			//	Not allow making loops
+			//	Delete this if you want to allow loops
+			if (firstNode == secondNode)
+				return false;
+			//	End block
+
+			unsigned int listSize = listOfEdges.size();
+			bool isFirst = false, isSecond = false;
+			for (int i = 0; i < listSize; i++) {
+				if (listOfEdges[i][0] == firstNode) {
+					listOfEdges[i].push_back(secondNode);
+					isFirst = true;
+				}
+				if (listOfEdges[i][0] == secondNode) {
+					listOfEdges[i].puch_back(firstNode);
+					isSecond = true;
+				}
+				if (isFirst && isSecond)
+					return true;
+			}
+			//	Element was connected to... non-existing node
+			if (!isFirst) {
+				addElementList(firstNode);
+				listOfEdges[listOfEdges.size()].push_back(firstNode);
+				listOfEdges[listOfEdges.size()].push_back(secondNode);
+				return true;
+			}
+			if (!isSecond) {
+				addElementList(secondNode);
+				listOfEdges[listOfEdges.size()].push_back(secondNode);
+				listOfEdges[listOfEdges.size()].push_back(firstNode);
+			}
+			return true;
+		}
+		bool connectElementToAnotherElementMatrix(TNodeType firstNode, TNodeType secondNode) {
+			int firstNumber = -1, secondNumber = -1;
+			for (int i = 0; i < numberOfElements; i++)
+				if (elementToNumberList[i] == firstNode) {
+					firstNumber = i;
+					break;
+				}
+			for (int i = 0; i < numberOfElements; i++)
+				if (elementToNumberList[i] == secondNode) {
+					secondNumber = i;
+					break;
+				}
+
+			if (firstNumber == -1) {
+				findElementByNameMatrix(firstNode);
+				firstNumber = numberOfElements;
+			}
+			if (secondNumber == -1) {
+				findElementByNameMatrix(secondNode);
+				secondNumber = numberOfElements;
+			}
+
+			matrixOfEdges[firstNumber][secondNumber] = matrixOfEdges[secondNumber][firstNumber] = 1;
+		}
 
 		/*
 		*	Returns a pointer to an element
@@ -179,8 +368,8 @@ namespace tvv {
 		*	Functions which are used to export one type
 		*	of saving elements to another
 		//*/
-		bool generateListOfEdges();
-		bool generateMatrixOfedges();
+		bool generateListFromMatrix();
+		bool generateMatrixFromList();
 
 		/*
 		*	Remakes the whole matrix and adds / subtracts % parameter %
@@ -196,7 +385,7 @@ namespace tvv {
 				//	Delete a whole matrix
 				for (int i = 0; i < numberOfElements; i++)
 					delete matrixOfEdges[i];
-				delete matrixOfEdges[];
+				delete[] matrixOfEdges;
 
 				numberOfElements = 0;
 			}
@@ -207,7 +396,7 @@ namespace tvv {
 					unsigned int **newMatrix;
 					int newNumberOfElements = numberOfElements - numberToChange;
 
-					newMatrix = new *unsigned int[newNumberOfElements];
+					newMatrix = new unsigned int*[newNumberOfElements];
 					for (int i = 0; i < newNumberOfElements; i++) {
 						newMatrix[i] = new unsigned int[newNumberOfElements];
 						for (int j = 0; j < newNumberOfElements; j++)
@@ -225,7 +414,7 @@ namespace tvv {
 				unsigned int **newMatrix;
 				int newNumberOfElements = numberOfElements + numberToChange;
 
-				newMatrix = new *unsigned int[newNumberOfElements];
+				newMatrix = new unsigned int*[newNumberOfElements];
 				for (int i = 0; i < newNumberOfElements; i++) {
 					newMatrix[i] = new unsigned int[newNumberOfElements];
 					for (int j = 0; j < newNumberOfElements; j++)
@@ -245,8 +434,6 @@ namespace tvv {
 			return true;
 		}
 
-		
-
 	public:
 		Graph() {
 			workType = true;
@@ -255,7 +442,7 @@ namespace tvv {
 		//	Back-end stuff will use Matrix
 		bool workWithMatrix() {
 			if (workType) {
-				generateMatrixOfedges();
+				generateMatrixFromList();
 				workType = false;
 				return true;
 			}
@@ -264,7 +451,7 @@ namespace tvv {
 		//	Back-end stuff will use List
 		bool workWithList() {
 			if (!workType) {
-				generateListOfEdges();
+				generateListFromMatrix();
 				workType = true;
 				return true;
 			}
