@@ -202,10 +202,10 @@ namespace tvv {
 				nodes.pop();
 
 				//	Get list of connected nodes
-				std::vector<TNodeType>::iterator nodeIterator;
+				 std::vector<TNodeType>::iterator nodeIterator;
 
-				for (nodeIterator = listOfEdges[vertex].begin() + 1; nodeIterator < listOfEdges[i].back(); nodeIterator++) {
-					int findNumber = findNumberInList(nudeIterator);
+				for (nodeIterator = listOfEdges[vertex].begin() + 1; nodeIterator < listOfEdges[vertex].back(); nodeIterator++) {
+					int findNumber = findNumberInList(nodeIterator);
 					if (findNumber == -1)
 						return false; //	No such element
 					if (used[findNumber] == false) {
@@ -233,9 +233,6 @@ namespace tvv {
 			while (nodes.empty() != true) {
 				int curVertex = nodes.front();
 				nodes.pop();
-
-				//	Get list of connected nodes
-				std::vector<TNodeType>::iterator nodeIterator;
 
 				for (int curNode = 0; curNode < numberOfElements; curNode++) {
 					if (matrixOfEdges[curVertex][curNode] != 0)
