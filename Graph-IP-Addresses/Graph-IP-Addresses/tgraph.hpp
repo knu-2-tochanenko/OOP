@@ -202,7 +202,7 @@ namespace tvv {
 				nodes.pop();
 
 				//	Get list of connected nodes
-				 std::vector<TNodeType>::iterator nodeIterator;
+				typename std::vector<TNodeType>::iterator nodeIterator;
 
 				for (nodeIterator = listOfEdges[vertex].begin() + 1; nodeIterator < listOfEdges[vertex].back(); nodeIterator++) {
 					int findNumber = findNumberInList(nodeIterator);

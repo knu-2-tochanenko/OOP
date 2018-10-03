@@ -8,3 +8,6 @@
 /Graph-IP-Addresses/Graph-IP-Addresses/Debug
 /Graph-IP-Addresses/x64/Debug
 /Graph-IP-Addresses/Graph-IP-Addresses/x64/Debug
+
+# User-specific files
+*.user
