@@ -357,9 +357,14 @@ namespace tvv {
 
 		/*
 		*	Generates random graph
+		*	with given number of nodes
 		//*/
-		bool generateRandomlist();
-		bool generateRandomMatrix();
+		bool generateRandomlist(int numberOfNodes) {
+
+		}
+		bool generateRandomMatrix(int numberOfNodes) {
+
+		}
 
 		/*
 		*	Functions which are used to export one type

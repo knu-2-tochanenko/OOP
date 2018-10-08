@@ -6,147 +6,171 @@
 #include <ctime>
 #include <random>
 
+using std::string;
+
+//	Functions to work with hex to int conversations and visa-versa
+namespace HEX {
+	int toNum(char symbol) {
+		if ((symbol >= '0') && (symbol <= '9'))
+			return (int)(symbol - '0');
+		else if ((symbol >= 'a') && (symbol <= 'f'))
+			return (int)(symbol - 'a') + 10;
+		else if ((symbol >= 'A') && (symbol <= 'F'))
+			return (int)(symbol - 'A') + 10;
+		else
+			//	Make and exception
+			return -1;
+	}
+	char toChar(int num) {
+		if (num < 10)
+			return (char)('0' + num);
+		else
+			return (char)('a' + (num - 10));
+	}
+	int hexToInt(string number) {
+		if (number.size() == 0)
+			return 0;
+		std::reverse(number.begin(), number.end());
+		int numberLength = number.size();
+		int resNum = 0;
+		for (int i = 0; i < numberLength; i++)
+			resNum += toNum(number[i]) * pow(16, i);
+		return resNum;
+	}
+	string intToHex(int num) {
+		string resNum;
+		int curNum;
+		while (num > 0) {
+			curNum = num & 15;
+			resNum += toChar(curNum);
+			num = num >> 4;
+		}
+		std::reverse(resNum.begin(), resNum.end());
+		return resNum;
+	}
+}
+
 namespace tvv {
+
 	class IpAddress {
 	private:
-
-		//	May be used in the future
-		enum IPType { v4 = 4, v6 = 6 };
-
-		unsigned int IPv4[4];
-		unsigned int IPv6[8];
-		//unsigned int AdressMask; // Number of bits which equal 1
-
-		//	True if it may be used only as IPv6, else it is false
-		bool onlyIpv6;
-
-		/*
-		*	Method which is used to convert IPv4 to IPv6
-		*	and vice versa
-		*	Parameter is referred to which type it is needed
-		*	to convert IP address
-		*	Result is false, if last 5 octets in IPv6 are not = 0
-		*	and WON'T sync it
-		//*/
-		bool syncAddresses(IPType iptype) {
-			if ((iptype == v4) && isConvertable()) {
-				IPv4[0] = IPv6[6] >> 4;
-				IPv4[1] = IPv6[6] % 256;
-				IPv4[2] = IPv6[7] >> 4;
-				IPv4[3] = IPv6[7] % 256;
-			}
-			else {
-				IPv6[0] = 0;
-				IPv6[1] = 0;
-				IPv6[2] = 0;
-				IPv6[3] = 0;
-				IPv6[4] = 0;
-				IPv6[5] = 65535;
-				IPv6[6] = (IPv4[0] << 4) + IPv4[1];
-				IPv6[7] = (IPv4[2] << 4) + IPv4[3];
-			}
-		}
-		bool isConvertable() {
-			if (((this->IPv6[0] + this->IPv6[1] + this->IPv6[2] + this->IPv6[3] + this->IPv6[4]) == 0)
-				&& (this->IPv6[5] == 65535))
-				return true;
-			else
-				return false;
-		}
+		unsigned int IP[8];
 
 	public:
-		//	Default constructor
 		IpAddress() {
-
+			generateRandomIpV4();
 		}
-		//	Constructor for IPv4 format
 		IpAddress(unsigned int octet0, unsigned int octet1, unsigned int octet2, unsigned int octet3) {
-			IPv4[0] = octet0;
-			IPv4[1] = octet1;
-			IPv4[2] = octet2;
-			IPv4[3] = octet3;
-			onlyIpv6 = false;
+			IP[0] = 0;
+			IP[1] = 0;
+			IP[2] = 0;
+			IP[3] = 0;
+			IP[4] = 0;
+			IP[5] = 65535;
+			IP[6] = (octet0 << 4) + octet1;
+			IP[7] = (octet2 << 4) + octet3;
 		}
-		//	Constructor for IPv6 format
-		IpAddress(unsigned int octet0, unsigned int octet1, unsigned int octet2, unsigned int octet3,
+		IpAddress(string ipAddressString) {
+			int octet[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+			int stringLength = ipAddressString.size(),
+				curNum = 0,
+				octetIterator = 0;
+			string curOctet = "";
+			//	Divide one string into octets in decimal form
+			for (int i = 0; i < stringLength; i++) {
+				if (ipAddressString[i] == ':') {
+					IP[octetIterator] = HEX::hexToInt(curOctet);
+					curOctet = "";
+					octetIterator++;
+				}
+				else curOctet += ipAddressString[i];
+			}
+			IP[octetIterator] = HEX::hexToInt(curOctet);
+			for (int i = 0; i < 8; i++)
+				IP[i] = octet[i];
+		}
+
+		//	Rewrite address using int values
+		bool setIpV4(unsigned int octet0, unsigned int octet1, unsigned int octet2, unsigned int octet3) {
+			IP[0] = 0;
+			IP[1] = 0;
+			IP[2] = 0;
+			IP[3] = 0;
+			IP[4] = 0;
+			IP[5] = 65535;
+			IP[6] = (octet0 << 4) + octet1;
+			IP[7] = (octet2 << 4) + octet3;
+		}
+		bool setIpV6(unsigned int octet0, unsigned int octet1, unsigned int octet2, unsigned int octet3,
 			unsigned int octet4, unsigned int octet5, unsigned int octet6, unsigned int octet7) {
-			IPv6[0] = octet0;
-			IPv6[1] = octet1;
-			IPv6[2] = octet2;
-			IPv6[3] = octet3;
-			IPv6[4] = octet4;
-			IPv6[5] = octet5;
-			IPv6[6] = octet6;
-			IPv6[7] = octet7;
-			// may be :/
-			onlyIpv6 = true;
+			IP[0] = octet0;
+			IP[1] = octet1;
+			IP[2] = octet2;
+			IP[3] = octet3;
+			IP[4] = octet4;
+			IP[5] = octet5;
+			IP[6] = octet6;
+			IP[7] = octet7;
 		}
-
-		std::string getIPv4Address() {
-			return std::to_string(IPv4[0]) + ':' + std::to_string(IPv4[1]) + ':'
-				+ std::to_string(IPv4[2]) + ':' + std::to_string(IPv4[3]);
-		}
-		std::string getIPv6Address() {
-			//	TODO make hex to string function
-			return std::to_string(IPv6[0]) + ':' + std::to_string(IPv6[1]) + ':'
-				+ std::to_string(IPv6[2]) + ':' + std::to_string(IPv6[3]) + ':'
-				+ std::to_string(IPv6[4]) + ':' + std::to_string(IPv6[5]) + ':'
-				+ std::to_string(IPv6[6]) + ':' + std::to_string(IPv6[7]);
-		}
-
-		//	Generates random IP address in IPv4 form
-		static IpAddress* generateRandomIPv4() {
-			srand(time(NULL));
-			IpAddress *newAddress = new IpAddress();
-			newAddress->onlyIpv6 = false;
-			newAddress->IPv4[0] = rand() % 255;
-			newAddress->IPv4[1] = rand() % 255;
-			newAddress->IPv4[2] = rand() % 255;
-			newAddress->IPv4[3] = rand() % 255;
-			return newAddress;
-		}
-		//	Generates random IP address in IPv6 form
-		static IpAddress* generateRandomIPv6() {
-			srand(time(NULL));
-			IpAddress *newAddress = new IpAddress();
-			// may be :/
-			newAddress->onlyIpv6 = true;
-			newAddress->IPv6[0] = rand() % 255;
-			newAddress->IPv6[1] = rand() % 255;
-			newAddress->IPv6[2] = rand() % 255;
-			newAddress->IPv6[3] = rand() % 255;
-			newAddress->IPv6[4] = rand() % 255;
-			newAddress->IPv6[5] = rand() % 255;
-			newAddress->IPv6[6] = rand() % 255;
-			newAddress->IPv6[7] = rand() % 255;
-			return newAddress;
-		}
-
-		//	TODO write 
-		bool checkIfIpIsInSubnet(IpAddress sourceIp, int mask);
 
 		const bool operator== (const IpAddress &secondIp) {
-			if (this->onlyIpv6 != secondIp.onlyIpv6)
-				return false;
-			if (!(this->onlyIpv6))
-				if ((this->IPv4[0] == secondIp.IPv4[0])
-					&& (this->IPv4[1] == secondIp.IPv4[1])
-					&& (this->IPv4[2] == secondIp.IPv4[2])
-					&& (this->IPv4[3] == secondIp.IPv4[3]))
-					return true;
-				else
+			for (int i = 0; i < 8; i++)
+				if (this->IP[i] != secondIp.IP[i])
 					return false;
-			else
-				if ((this->IPv6[0] == secondIp.IPv6[0])
-					&& (this->IPv6[1] == secondIp.IPv6[1])
-					&& (this->IPv6[2] == secondIp.IPv6[2])
-					&& (this->IPv6[3] == secondIp.IPv6[3])
-					&& (this->IPv6[4] == secondIp.IPv6[4])
-					&& (this->IPv6[5] == secondIp.IPv6[5])
-					&& (this->IPv6[6] == secondIp.IPv6[6])
-					&& (this->IPv6[7] == secondIp.IPv6[7]))
-					return true;
-				else return false;
+			return true;
+		}
+
+		//	A function which tells whether this IP is in subnet of specific address
+		bool checkIfInSubnetIpV4(IpAddress mainNode, int mask) {
+			return checkIfInSubnetIpV6(mainNode, mask + 96);
+		}
+		bool checkIfInSubnetIpV6(IpAddress mainNode, int mask) {
+			int bitIterator;
+			for (int i = 0; i < 8; i++) {
+				if (this->IP[i] == mainNode.IP[i])
+					continue;
+				else {
+					bitIterator = 1 << 15;
+					for (int j = 0; j < 16; j++) {
+						//	Check if bits are equal
+						if ((this->IP[i] & bitIterator) != (mainNode.IP[i] & bitIterator))
+							//	If bits are not equal and in the range of current mask
+							if (mask >= (i * 8 + j + 1))
+								return false;
+							else
+								return true;
+						bitIterator = bitIterator >> 1;
+					}
+				}
+			}
+			return true;
+		}
+
+		//	Generate random IP address
+		bool generateRandomIpV4() {
+			srand(time(NULL));
+			this->IP[0] = 0;
+			this->IP[1] = 0;
+			this->IP[2] = 0;
+			this->IP[3] = 0;
+			this->IP[4] = 0;
+			this->IP[5] = 65535;
+			this->IP[6] = rand() % 65535;
+			this->IP[7] = rand() % 65535;
+			return true;
+		}
+		bool generateRandomIpV6() {
+			srand(time(NULL));
+			this->IP[0] = rand() % 65535;
+			this->IP[1] = rand() % 65535;
+			this->IP[2] = rand() % 65535;
+			this->IP[3] = rand() % 65535;
+			this->IP[4] = rand() % 65535;
+			this->IP[5] = rand() % 65535;
+			this->IP[6] = rand() % 65535;
+			this->IP[7] = rand() % 65535;
+			return true;
 		}
 	};
 }
