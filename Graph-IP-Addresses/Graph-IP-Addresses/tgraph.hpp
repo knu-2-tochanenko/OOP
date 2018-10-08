@@ -4,8 +4,13 @@
 #include <vector>
 #include <string>
 #include <queue>
+#include <ctime>
+#include <random>
 
 namespace tvv {
+	/*
+	*	Class Graph is used to store elements of various types
+	//*/
 	template <typename TNodeType> class Graph {
 	private:
 		/*
@@ -15,7 +20,6 @@ namespace tvv {
 		*	false - matrix
 		//*/
 		bool ifWorkWithList;
-
 		/*
 		*	listOfEdges will be generated no matter what
 		*	The first element in each sub vector is the name of the node
@@ -40,7 +44,7 @@ namespace tvv {
 			short int listSize = listOfEdges.size();
 			//	If the list is empty
 			if (listSize == 0) {
-				listOfEdges.push_back(new std::vector<short int>());
+				listOfEdges.push_back(std::vector<short int>());
 				elementToNumberList.push_back(elementToAdd);
 				return true;
 			}
@@ -50,7 +54,7 @@ namespace tvv {
 				if (elementToNumberList[vectorIterator] == elementToAdd)
 					return false;
 			}
-			listOfEdges.push_back(new std::vector<short int>());
+			listOfEdges.push_back(std::vector<short int>());
 			elementToNumberList.push_back(elementToAdd);
 			return true;
 		}
@@ -58,8 +62,8 @@ namespace tvv {
 			int listSize = elementToNumberList.size();
 			//	If the Matrix is empty
 			if (listSize == 0) {
-				matrixOfEdges = new int[1];
-				matrixOfEdges[0] = new int[1];
+				matrixOfEdges = new short int*[1];
+				matrixOfEdges[0] = new short int[1];
 				matrixOfEdges[0][0] = 0;
 				elementToNumberList.push_back(elementToAdd);
 				return true;
@@ -170,7 +174,7 @@ namespace tvv {
 
 		//	Finds a number for specific TNodeType element in list
 		int findNumberInList(TNodeType vertex) {
-			unsigned int listSize = elementToNumberList.size();
+			int listSize = elementToNumberList.size();
 			for (int i = 0; i < listSize; i++)
 				if (elementToNumberList[i] == vertex)
 					return i;
@@ -317,7 +321,7 @@ namespace tvv {
 					firstToSecond = true;
 					break;
 				}
-			int numberOfNodes = listOfEdges[secondNodeNumber].size();
+			numberOfNodes = listOfEdges[secondNodeNumber].size();
 			for (int vectorIterator = 0; vectorIterator < numberOfNodes; vectorIterator++)
 				if (listOfEdges[secondNodeNumber][vectorIterator] == firstNodeNumber) {
 					secondToFirst = true;
@@ -355,32 +359,58 @@ namespace tvv {
 			}
 
 			matrixOfEdges[firstNumber][secondNumber] = matrixOfEdges[secondNumber][firstNumber] = 1;
-		}
-
-		/*
-		*	Returns a pointer to an element
-		*	If it has no such element, returns NULL
-		//*/
-		TNodeType* findElementByNameList(TNodeType);
-		TNodeType* findElementByNameMatrix(TNodeType);
-
-		/*
-		*	Generates random graph
-		*	with given number of nodes
-		//*/
-		bool generateRandomlist(int numberOfNodes) {
-
-		}
-		bool generateRandomMatrix(int numberOfNodes) {
-
+			return true;
 		}
 
 		/*
 		*	Functions which are used to export one type
-		*	of saving elements to another
+		*	of saving elements to another.
+		*	WARNING! This function deletes unused structure
 		//*/
-		bool generateListFromMatrix();
-		bool generateMatrixFromList();
+		bool generateListFromMatrix() {
+			int listSize = elementToNumberList.size();
+
+			//	Create new list
+			listOfEdges.reserve(listSize);
+
+			for (int i = 0; i < listSize; i++)
+				for (int j = i; j < listSize; j++)
+					if (matrixOfEdges[i][j] == 1) {
+						listOfEdges[i].push_back(j);
+						listOfEdges[j].push_back(i);
+					}
+
+
+			//	Delete old matrix
+			for (int i = 0; i < listSize; i++)
+				delete matrixOfEdges[i];
+			delete[] matrixOfEdges;
+		}
+		bool generateMatrixFromList() {
+			int listSize = elementToNumberList.size();
+
+			//	Create new matrix
+			matrixOfEdges = new short int*[listSize];
+			for (int i = 0; i < listSize; i++)
+				matrixOfEdges[i] = new short int[listSize];
+			for (int i = 0; i < listSize; i++)
+				for (int j = 0; j < listSize; j++)
+					matrixOfEdges[i][j] = 0;
+
+			int numberOfNodes = 0;
+			for (int vectorIterator = 0; vectorIterator < listSize; vectorIterator++) {
+				numberOfNodes = listOfEdges[vectorIterator].size();
+				for (int nodesIterator = 0; nodesIterator < numberOfNodes; nodesIterator++) {
+					matrixOfEdges[vectorIterator][ listOfEdges[vectorIterator][nodesIterator] ] = 1;
+					matrixOfEdges[ listOfEdges[vectorIterator][nodesIterator] ][vectorIterator] = 1;
+				}
+			}
+
+			//	Delete old list
+			for (int vectorIterator = 0; vectorIterator < listSize; vectorIterator++)
+				listOfEdges[vectorIterator].clear();
+			listOfEdges.clear();
+		}
 
 		/*
 		*	Remakes the whole matrix and adds / subtracts % parameter %
@@ -391,7 +421,7 @@ namespace tvv {
 		bool matrixChangeNumberOfEdges(int numberToChange, int numberOfEdges) {
 			if (numberToChange == 0)
 				return true;
-			if (numberOfEdges + numberToChange = 0) {
+			if (numberOfEdges + numberToChange == 0) {
 				//	Delete a whole matrix
 				for (int i = 0; i < numberOfEdges; i++)
 					delete matrixOfEdges[i];
@@ -401,12 +431,12 @@ namespace tvv {
 				if (numberOfEdges - numberToChange < 0)
 					return false;
 				else {
-					unsigned int **newMatrix;
+					short int **newMatrix;
 					int newNumberOfElements = numberOfEdges - numberToChange;
 
-					newMatrix = new unsigned int*[newNumberOfElements];
+					newMatrix = new short int*[newNumberOfElements];
 					for (int i = 0; i < newNumberOfElements; i++) {
-						newMatrix[i] = new unsigned int[newNumberOfElements];
+						newMatrix[i] = new short int[newNumberOfElements];
 						for (int j = 0; j < newNumberOfElements; j++)
 							newMatrix[i][j] = matrixOfEdges[i][j];
 					}
@@ -417,12 +447,12 @@ namespace tvv {
 					matrixOfEdges = newMatrix;
 				}
 			else {
-				unsigned int **newMatrix;
+				short int **newMatrix;
 				int newNumberOfElements = numberOfEdges + numberToChange;
 
-				newMatrix = new unsigned int*[newNumberOfElements];
+				newMatrix = new short int*[newNumberOfElements];
 				for (int i = 0; i < newNumberOfElements; i++) {
-					newMatrix[i] = new unsigned int[newNumberOfElements];
+					newMatrix[i] = new short int[newNumberOfElements];
 					for (int j = 0; j < newNumberOfElements; j++)
 						if ((j < numberOfEdges) && (i < numberOfEdges))
 							newMatrix[i][j] = matrixOfEdges[i][j];
@@ -443,6 +473,57 @@ namespace tvv {
 			ifWorkWithList = true;
 		}
 
+		//	Public functions to work with elements
+		bool addElement(TNodeType elementToAdd) {
+			if (ifWorkWithList)
+				return addElementList(elementToAdd);
+			else
+				return addElementMatrix(elementToAdd);
+		}
+		bool eraseElement(TNodeType elementToErase) {
+			if (ifWorkWithList)
+				return eraseElementList(elementToErase);
+			else
+				return eraseElementMatrix(elementToErase);
+		}
+		bool checkForConnectivity() {
+			if (ifWorkWithList)
+				return checkForConnectivityList();
+			else
+				return checkForConnectivityMatrix();
+		}
+		int findMinLength(TNodeType firstNode, TNodeType secondNode) {
+			if (ifWorkWithList)
+				return findMinLengthList(firstNode, secondNode);
+			else
+				return findMinLengthMatrix(firstNode, secondNode);
+		}
+		bool connectElementToAnotherElement(TNodeType firstNode, TNodeType secondNode) {
+			if (ifWorkWithList)
+				return connectElementToAnotherElementList(firstNode, secondNode);
+			else
+				return connectElementToAnotherElementMatrix(firstNode, secondNode);
+		}
+
+		/*
+		*	Randomly generates connections.
+		*	Generates up to maxNumberOfConnections connections
+		//*/
+		bool randomlyConnect(int maxNumberOfConnections) {
+			if (maxNumberOfConnections <= 0)
+				return false;	//	If user is stupid
+			srand(time(NULL));
+
+			int firstNode, secondNode,
+				listSize = elementToNumberList.size();
+			for (int i = 0; i < maxNumberOfConnections; i++) {
+				firstNode = rand() % listSize;
+				secondNode = rand() % listSize;
+				connectElementToAnotherElement(elementToNumberList[firstNode], elementToNumberList[secondNode]);
+			}
+			return true;
+		}
+
 		//	Back-end stuff will use Matrix
 		bool workWithMatrix() {
 			if (ifWorkWithList) {
@@ -460,6 +541,44 @@ namespace tvv {
 				return true;
 			}
 			return false;
+		}
+
+		bool getInformationString() {
+			if (ifWorkWithList) {
+				std::cout << "Working in List mode\n";
+				int listSize = elementToNumberList.size();
+				for (int i = 0; i < listSize; i++) {
+					std::cout << i << "\t:\t" << elementToNumberList[i] << "\n";
+				}
+
+				int nodesSize = 0;
+				for (int i = 0; i < listSize; i++) {
+					nodesSize = listOfEdges[i].size();
+					std::cout << i << ": ";
+					for (int j = 0; j < nodesSize; j++)
+						std::cout << listOfEdges[i][j] << ", ";
+					std::cout << "\n";
+				}
+
+			}
+			else {
+				std::cout << "Working in Matrix mode\n";
+				int listSize = elementToNumberList.size();
+				for (int i = 0; i < listSize; i++) {
+					std::cout << i << "\t:\t" << elementToNumberList[i] << "\n";
+				}
+
+				int nodesSize = 0;
+				for (int i = 0; i < listSize; i++) {
+					std::cout << i << ": ";
+					for (int j = 0; j < listSize; j++) {
+						if (matrixOfEdges[i][j] == 1)
+							std::cout << j << ", ";
+						std::cout << "\n";
+					}
+				}
+			}
+			return true;
 		}
 
 	};

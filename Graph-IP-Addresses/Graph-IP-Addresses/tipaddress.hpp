@@ -172,5 +172,12 @@ namespace tvv {
 			this->IP[7] = rand() % 65535;
 			return true;
 		}
+
+		inline std::ostream & operator << (std::ostream & res) {
+			for (int i = 0; i < 7; i++)
+				res << HEX::intToHex(IP[i]) << ":";
+			res << HEX::intToHex(IP[7]);
+			return res;
+		}
 	};
 }
