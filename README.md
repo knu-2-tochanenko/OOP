@@ -7,5 +7,5 @@
 ### Graph and IP Adresses (lab 1)
 A first university progect of the second year.\
 The project has two major classes : Graph and IpAddress\
-The stage of it is **really** unstable. Is is **NOT** NULL-Pointer safe at the moment.\
+The stage of it is mostly done. Please, report a bug, if you've found one.\
 [Go to code](https://github.com/tochanenko/knu-2nd-oop/tree/master/Graph-IP-Addresses/Graph-IP-Addresses)
