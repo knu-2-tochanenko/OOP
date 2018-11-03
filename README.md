@@ -12,7 +12,7 @@ The stage of it is mostly done. Please, report a bug, if you've found one.\
 
 ### Note App (lab 2)
 The second university project of the second year.\
-This app is going to have listed features:\
+This app is going to have listed features:
 * Exporting to .txt files
 * Moving notes to archive
 * Notes type (work, personal)
