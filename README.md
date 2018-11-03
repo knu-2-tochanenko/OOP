@@ -18,5 +18,5 @@ This app is going to have listed features:
 * Notes type (work, personal)
 * Hierarchal notes
 * Tags
-* Global hotkey
+* Global hotkey\
 [Go to code](https://github.com/tochanenko/knu-2nd-oop/tree/master/Note-App)
