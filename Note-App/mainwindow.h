@@ -6,6 +6,7 @@
 #include <QString>
 #include <QVector>
 #include <QJsonObject>
+#include <QMap>
 
 namespace Ui {
     class MainWindow;
@@ -33,7 +34,11 @@ private slots:
 private:
     Ui::MainWindow *ui;
     // Vector of notes
-    QVector<SingleNote> notes;
+    QVector<SingleNote*> notes;
+    QMap<int, QString> tags;
+
+    bool readJSON(QString filePath);
+    bool writeJSON(QString filePath);
 };
 
 #endif // MAINWINDOW_H

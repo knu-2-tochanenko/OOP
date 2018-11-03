@@ -64,6 +64,17 @@
      <property name="font">
       <font>
        <family>Century Gothic</family>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Date</string>
+     </property>
+     <property name="font">
+      <font>
+       <family>Century Gothic</family>
       </font>
      </property>
     </column>
@@ -74,6 +85,7 @@
      <property name="font">
       <font>
        <family>Century Gothic</family>
+       <pointsize>9</pointsize>
       </font>
      </property>
     </column>
@@ -84,6 +96,7 @@
      <property name="font">
       <font>
        <family>Century Gothic</family>
+       <pointsize>9</pointsize>
       </font>
      </property>
     </column>
