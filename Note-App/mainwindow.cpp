@@ -45,10 +45,6 @@ void MainWindow::on_button_newTag_clicked() {
     addTagFunction();
 }
 
-void MainWindow::on_button_deleteTag_clicked() {
-
-}
-
 void MainWindow::on_button_backup_clicked() {
 
 }
@@ -65,19 +61,21 @@ void MainWindow::showContextMenu(const QPoint &pos) {
     QPoint globalPos = ui->list_tags->mapToGlobal(pos);
 
     QMenu myMenu;
-    myMenu.addAction("Insert", this, SLOT(addItem()));
-    myMenu.addAction("Delete",  this, SLOT(eraseItem()));
+    myMenu.addAction("Insert", this, SLOT(addTagItem()));
+    myMenu.addAction("Delete",  this, SLOT(deleteTagItem()));
 
     myMenu.exec(globalPos);
 }
 
-void MainWindow::addItem() {
+void MainWindow::addTagItem() {
     addTagFunction();
 }
 
-void MainWindow::eraseItem() {
-    for (int i = 0; i < ui->list_tags->selectedItems().size(); ++i) {
+void MainWindow::deleteTagItem() {
+    int listSize = ui->list_tags->selectedItems().size();
+    for (int i = 0; i < listSize; ++i) {
         QListWidgetItem *item = ui->list_tags->takeItem(ui->list_tags->currentRow());
+        // Unlick all notes
         delete item;
     }
 }
