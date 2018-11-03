@@ -548,7 +548,7 @@ namespace tvv {
 				std::cout << "Working in List mode\n";
 				int listSize = elementToNumberList.size();
 				for (int i = 0; i < listSize; i++) {
-					std::cout << i << "\t:\t" << elementToNumberList[i] << "\n";
+					std::cout << i << "\t:\t" << "\n";
 				}
 
 				int nodesSize = 0;
@@ -565,7 +565,7 @@ namespace tvv {
 				std::cout << "Working in Matrix mode\n";
 				int listSize = elementToNumberList.size();
 				for (int i = 0; i < listSize; i++) {
-					std::cout << i << "\t:\t" << elementToNumberList[i] << "\n";
+					std::cout << i << "\t:\t" << "\n";
 				}
 
 				int nodesSize = 0;

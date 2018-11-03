@@ -2,7 +2,7 @@
 #include "tipaddress.hpp"
 #include <iostream>
 
-/* HERE
+//* HERE
 bool generateRandom(tvv::Graph<tvv::IpAddress>& graph, int numberOfNodes, int numberOfConnections){
 	for (int i = 0; i < numberOfNodes; i++) {
 		tvv::IpAddress newAddress;
@@ -15,7 +15,7 @@ bool generateRandom(tvv::Graph<tvv::IpAddress>& graph, int numberOfNodes, int nu
 //*/
 
 int main() {
-	/* Place one more slash on the beginning of this line in order to check the work of graph. Also make the same on the line with HERE sign
+	//* Place one more slash on the beginning of this line in order to check the work of graph. Also make the same on the line with HERE sign
 	int numberOfNodes, numberOfConnections;
 	tvv::Graph<tvv::IpAddress> graph;
 	std::cin >> numberOfNodes >> numberOfConnections;
