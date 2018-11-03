@@ -51,6 +51,12 @@
       <height>371</height>
      </rect>
     </property>
+    <property name="gridStyle">
+     <enum>Qt::DashLine</enum>
+    </property>
+    <property name="sortingEnabled">
+     <bool>false</bool>
+    </property>
     <column>
      <property name="text">
       <string>Note text</string>
@@ -142,6 +148,9 @@
     <property name="text">
      <string>New Note</string>
     </property>
+    <property name="shortcut">
+     <string>Ctrl+N</string>
+    </property>
    </widget>
    <widget class="QPushButton" name="button_newTag">
     <property name="geometry">
@@ -183,6 +192,9 @@
     <property name="text">
      <string>Open Archive</string>
     </property>
+    <property name="shortcut">
+     <string>Ctrl+O</string>
+    </property>
    </widget>
    <widget class="QPushButton" name="button_backup">
     <property name="geometry">
@@ -201,6 +213,9 @@
     </property>
     <property name="text">
      <string>Backup Notes</string>
+    </property>
+    <property name="shortcut">
+     <string>Ctrl+Shift+B</string>
     </property>
    </widget>
   </widget>

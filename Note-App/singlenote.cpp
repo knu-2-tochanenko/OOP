@@ -10,6 +10,35 @@ SingleNote::SingleNote(QTime creationTime, QString text, QVector<QString> tags) 
     this->tags = tags;
 }
 
+void SingleNote::readJSON(const QJsonObject &json) {
+    if (json.contains("id") && json["id"].isDouble())
+        this->id = json["id"].toInt();
+    if (json.contains("creation_time") && json["creation_time"].isDouble())
+        this->creationTime = QTime().addSecs(json["creation_time"].toInt());
+    if (json.contains("edited_time") && json["edited_time"].isDouble())
+        this->editedTime = QTime().addSecs(json["edited_time"].toInt());
+    if (json.contains("note_text") && json["note_text"].isString())
+        this->text = json["note_text"].toString();
+    if (json.contains("tags") && json["tags"].isArray()) {
+        QJsonArray tagsArray = json["tags"].toArray();
+        int numberOfTags = tagsArray.count();
+        for (int i = 0; i < numberOfTags; i++) {
+            this->tags.push_back(tagsArray[i].toString());
+        }
+    }
+}
+
+void SingleNote::writeJSON(QJsonObject &json) const {
+    json["id"] = this->id;
+    json["creation_time"] = QTime(0,0,0).secsTo(this->creationTime);
+    json["edited_time"] = QTime(0,0,0).secsTo(this->editedTime);
+    QJsonArray tagsArray;
+    int tagsSize = this->tags.size();
+    for (int i = 0; i < tagsSize; i++)
+        tagsArray.push_back(this->tags[i]);
+    json["tags"] = tagsArray;
+}
+
 QTime SingleNote::getCreationTime() {
     return this->creationTime;
 }

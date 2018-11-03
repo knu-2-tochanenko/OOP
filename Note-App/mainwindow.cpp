@@ -12,9 +12,12 @@ MainWindow::MainWindow(QWidget *parent) :
     // Right button for list
     ui->list_tags->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(ui->list_tags, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
+
+    // TODO : Add reading from JSON file
 }
 
 MainWindow::~MainWindow() {
+    // TODO : Add writing to JSON file
     delete ui;
 }
 

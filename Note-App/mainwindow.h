@@ -1,8 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "singlenote.h"
 #include <QMainWindow>
 #include <QString>
+#include <QVector>
+#include <QJsonObject>
 
 namespace Ui {
     class MainWindow;
@@ -29,6 +32,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    // Vector of notes
+    QVector<SingleNote> notes;
 };
 
 #endif // MAINWINDOW_H
