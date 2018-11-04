@@ -19,6 +19,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->list_tags->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(ui->list_tags, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 
+    ui->list_tags->addItem("uncategorized");
+    ui->list_tags->addItem("work");
+    ui->list_tags->addItem("university");
+    this->tags.push_back("uncategorized");
+    this->tags.push_back("work");
+    this->tags.push_back("university");
     // TODO : Add reading from JSON file
 }
 
@@ -60,14 +66,29 @@ void MainWindow::on_button_backup_clicked() {
 
 void MainWindow::on_button_newNote_clicked() {
     bool ok;
-
-    QInputDialog qid;
-    // TODO : Find a way to resize this window
-    QString tagText = qid.getText(this, tr("New Note"), tr("Note text:"), QLineEdit::Normal, "default", &ok);
+    QString noteText = QInputDialog::getMultiLineText(this, tr("New Note"), tr("Note text:"), "default", &ok);
     QTime creatingTime = QTime::currentTime();
     QDate creationDate = QDate::currentDate();
-    // TODO : Make adding new note to JSON 7 tabel
-    // TODO : Make new note funcion
+    QString text = noteText;
+    QVector<QString> tags;
+    int ID = this->maxID + 1;
+    this->maxID++;
+
+    // Get list of tags
+    //*
+    bool moreTags = true;
+    QStringList stringList;
+    int tagsSize = this->tags.size();
+    for (int i = 0; i < tagsSize; i++)
+        stringList.push_back(this->tags[i]);
+    while (moreTags) {
+        QString tag = QInputDialog::getItem(this, tr("QInputDialog::getItem()"),
+                                            tr("Season:"), stringList, 0, false, &ok);
+        moreTags = false;
+    }
+    //*/
+    // TODO : Make adding new note to JSON tabel
+    // TODO : Make new note function
 }
 
 void MainWindow::on_button_openArchive_clicked() {
@@ -89,7 +110,8 @@ void MainWindow::addTagItem() {
 }
 
 bool MainWindow::readJSON(QString filePath) {
-    // TODO : Read all tags from another file
+    // TODO : Read all tags
+    // TODO : Read maxID tag
     QFile readNotesFile;
     readNotesFile.setFileName(filePath);
     if (!readNotesFile.open(QFile::ReadOnly | QFile::Text))
@@ -106,12 +128,16 @@ bool MainWindow::readJSON(QString filePath) {
         SingleNote *note = new SingleNote(jsonArray[i].toObject());
         this->notes.push_back(note);
     }
+
+    // Get array of tags
+
     readNotesFile.close();
     return true;
 }
 
 bool MainWindow::writeJSON(QString filePath) {
-    // TODO : Write tags to another file
+    // TODO : Write tags
+    // TODO : Write maxID
     QFile writeNotesFile;
     writeNotesFile.setFileName(filePath);
     if (!writeNotesFile.open(QFile::WriteOnly))

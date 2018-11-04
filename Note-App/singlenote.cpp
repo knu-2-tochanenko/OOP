@@ -4,7 +4,7 @@ SingleNote::SingleNote() {
     // Empty constructor. Nothig special. Please, use writeJSOM fucntion!
 }
 
-SingleNote::SingleNote(QTime creationTime, QDate creationDate, QString text, QVector<int> tags) {
+SingleNote::SingleNote(QTime creationTime, QDate creationDate, QString text, QVector<QString> tags) {
     this->creationTime = creationTime;
     this->creationDate = creationDate;
     this->editedTime = creationTime;
@@ -38,7 +38,7 @@ void SingleNote::readJSON(const QJsonObject &json) {
         QJsonArray tagsArray = json["tags"].toArray();
         int numberOfTags = tagsArray.count();
         for (int i = 0; i < numberOfTags; i++) {
-            this->tags.push_back(tagsArray[i].toInt());
+            this->tags.push_back(tagsArray[i].toString());
         }
     }
 }

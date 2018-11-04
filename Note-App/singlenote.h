@@ -15,10 +15,10 @@ private:
     QTime editedTime;
     QDate editedDate;
     QString text;
-    QVector<int> tags;
+    QVector<QString> tags;
 public:
     SingleNote();
-    SingleNote(QTime creationTime, QDate creationDate, QString text, QVector<int> tags);
+    SingleNote(QTime creationTime, QDate creationDate, QString text, QVector<QString> tags);
     SingleNote(const QJsonObject &json);
 
     void readJSON(const QJsonObject &json);
