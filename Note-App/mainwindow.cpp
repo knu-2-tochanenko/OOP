@@ -26,8 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->tags.push_back("university");
 
     if (!readJSON("backup.json")) {
+        // If the is no safe file
         this->maxID = 0;
-        // TODO : If the is no safe
         qDebug() << "There is no file\n";
     }
 }
@@ -133,11 +133,54 @@ void MainWindow::addTagItem() {
 }
 
 void MainWindow::editTagItem() {
-    // TODO : Make edit funciton
+    int listSize = ui->list_tags->selectedItems().size();
+    for (int k = 0; k < listSize; ++k) {
+        if (ui->list_tags->selectedItems()[k]->text() == "uncategorized"
+                || ui->list_tags->selectedItems()[k]->text() == "work"
+                || ui->list_tags->selectedItems()[k]->text() == "university") {
+            QMessageBox messageBox;
+            messageBox.critical(nullptr,"Error","You can't edit \"" + ui->list_tags->selectedItems()[k]->text() + "\" tag!");
+            messageBox.setFixedSize(600,200);
+        }
+        else {
+            QString tagToEdit = ui->list_tags->selectedItems()[k]->text();
+            int tagSize = tags.size();
+            for (int i = 0; i < tagSize; i++)
+                if (tags[i] == tagToEdit) {
+                    bool ok;
+                    QString tagText = QInputDialog::getText(this, tr("Create New Tag"), tr("Tag name:"), QLineEdit::Normal, "default", &ok);
+                    tagText = tagText.toLower();
+
+                    if (ok && !tagText.isEmpty()) {
+                        // Chek for similar tag
+                        int numberOfTags = ui->list_tags->count();
+                        bool hasSame = false;
+                        for (int i = 0; i < numberOfTags; i++)
+                            if (ui->list_tags->item(k)->text() == tagText)
+                                hasSame = true;
+                        if (!hasSame) {
+                            for (int j = 0; j < tagSize; j++) {
+                                if (tags[j] == tagToEdit) {
+                                    tags[j] = tagText;
+                                    ui->list_tags->selectedItems()[k]->setText(tagText);
+                                }
+                            }
+                        }
+                        else {
+                            // If tag is already available
+                            QMessageBox messageBox;
+                            messageBox.critical(nullptr,"Error","There is already a \"" + tagText + "\" tag!");
+                            messageBox.setFixedSize(600,200);
+                        }
+                    }
+                    break;
+                }
+        }
+    }
 }
 
 void MainWindow::addTagToFilter() {
-    // TODO : Make add to filter funcion
+    // TODO : Make add to filter function
 }
 
 bool MainWindow::readJSON(QString filePath) {
@@ -189,8 +232,10 @@ bool MainWindow::readJSON(QString filePath) {
     if (jsonObject.contains("tags") && jsonObject["tags"].isArray()) {
         QJsonArray tagArray = jsonObject["tags"].toArray();
         int tagsSize = tagArray.size();
-        for (int i = 0; i < tagsSize; i++)
+        for (int i = 0; i < tagsSize; i++) {
             this->tags.push_back(tagArray[i].toString());
+            ui->list_tags->addItem(tagArray[i].toString());
+        }
     }
 
     readNotesFile.close();
@@ -265,10 +310,11 @@ void MainWindow::debugNote(SingleNote *sn) {
              << "\nTags : " << sn->getTags();
 }
 
-void MainWindow::updateTabel(QStringList tags) {
+void MainWindow::updateTabel(QStringList filter) {
     // TODO : You know what to do
     if (tags.size() == 0) {
         // Display all notes
+
     }
     else {
         // Display selected notes
@@ -311,8 +357,21 @@ void MainWindow::deleteTagItem() {
         }
         else {
             QListWidgetItem *item = ui->list_tags->takeItem(ui->list_tags->currentRow());
-            item->text();
-            // TODO : Unlinck all notes from deleted tag
+            int tagSize = tags.size();
+            for (int j = 0; j < tagSize; j++)
+                if (tags[j] == item->text()) {
+                    tags.erase(tags.begin() + j);
+                    break;
+                }
+            // Unlinck all notes from deleted tag
+
+            int notesSize = notes.size();
+            int archiveSize = archive.size();
+            for (int j = 0; j < notesSize; j++)
+                notes[j]->deleteTag(item->text());
+            for (int j = 0; j < archiveSize; j++)
+                archive[j]->deleteTag(item->text());
+
             delete item;
         }
     }

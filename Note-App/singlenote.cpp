@@ -50,7 +50,7 @@ void SingleNote::writeJSON(QJsonObject &json) const {
     json["creation_date"] = this->creationDate.toString(Qt::TextDate);
     json["edited_time"] = this->editedTime.toString(Qt::TextDate);
     json["edited_date"] = this->editedDate.toString(Qt::TextDate);
-    json["text"] = this->text;
+    json["note_text"] = this->text;
     QJsonArray tagsArray;
     int tagsSize = this->tags.size();
     for (int i = 0; i < tagsSize; i++)
@@ -116,6 +116,9 @@ bool SingleNote::deleteTag(QString tag) {
     for (int i = 0; i < vectorSize; i++)
         if (tag == tags[i]) {
             tags.erase(tags.begin() + i);
+
+            if (tags.size() == 0)
+                tags.push_back("uncategorized");
             return true;
         }
     return false;
