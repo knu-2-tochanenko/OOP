@@ -39,6 +39,7 @@ private:
     QVector<SingleNote*> notes;
     QVector<SingleNote*> archive;
     QStringList tags;
+    QStringList filter;
 
     int maxID;
 
@@ -49,10 +50,12 @@ private:
 
     void debugNote(SingleNote *sn);
 
-    void updateTabel(QStringList tags);
+    void updateTable();
 
     bool moveToArchive(int ID);
     bool moveFromArchive(int ID);
+
+    void runInterface();
 };
 
 #endif // MAINWINDOW_H

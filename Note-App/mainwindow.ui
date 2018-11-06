@@ -70,7 +70,7 @@
     </column>
     <column>
      <property name="text">
-      <string>Date</string>
+      <string>Time</string>
      </property>
      <property name="font">
       <font>
@@ -80,7 +80,7 @@
     </column>
     <column>
      <property name="text">
-      <string>Time</string>
+      <string>Date</string>
      </property>
      <property name="font">
       <font>
@@ -127,7 +127,7 @@
      <rect>
       <x>260</x>
       <y>1</y>
-      <width>241</width>
+      <width>531</width>
       <height>41</height>
      </rect>
     </property>
