@@ -23,18 +23,21 @@ public:
 private slots:
     void on_button_newTag_clicked();
     void on_button_newNote_clicked();
-    void on_button_openArchive_clicked();
+    void on_button_toggleArchive_clicked();
     void on_button_backup_clicked();
 
     void showContextMenu(const QPoint&);
 
     void deleteTagItem();
     void addTagItem();
+    void editTagItem();
+    void addTagToFilter();
 
 private:
     Ui::MainWindow *ui;
     // Vector of notes
     QVector<SingleNote*> notes;
+    QVector<SingleNote*> archive;
     QStringList tags;
 
     int maxID;
@@ -45,6 +48,11 @@ private:
     bool checkYN();
 
     void debugNote(SingleNote *sn);
+
+    void updateTabel(QStringList tags);
+
+    bool moveToArchive(int ID);
+    bool moveFromArchive(int ID);
 };
 
 #endif // MAINWINDOW_H

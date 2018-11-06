@@ -187,7 +187,7 @@
      <string>Ctrl+T</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="button_openArchive">
+   <widget class="QPushButton" name="button_toggleArchive">
     <property name="geometry">
      <rect>
       <x>510</x>
@@ -203,7 +203,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Open Archive</string>
+     <string>Toggle Archive</string>
     </property>
     <property name="shortcut">
      <string>Ctrl+O</string>
