@@ -26,14 +26,16 @@ MainWindow::MainWindow(QWidget *parent) :
     this->tags.push_back("university");
 
     if (!readJSON("backup.json")) {
+        this->maxID = 0;
         // TODO : If the is no safe
         qDebug() << "There is no file\n";
     }
 }
 
 MainWindow::~MainWindow() {
-    if (!writeJSON("backup.json"))
+    if (!writeJSON("backup.json")) {
         qDebug()<<"Backup was corrapted!\n";
+    }
     delete ui;
 }
 
@@ -224,7 +226,8 @@ bool MainWindow::writeJSON(QString filePath) {
     QJsonArray tagArray;
     int tagArraySize = this->tags.size();
     for (int i = 0; i < tagArraySize; i++) {
-        tagArray.push_back(this->tags[i]);
+        if (this->tags[i] != "work" && this->tags[i] != "university" && this->tags[i] != "uncategorized")
+            tagArray.push_back(this->tags[i]);
     }
 
     finalObject["notes"] = notesArray;

@@ -22,15 +22,15 @@ void SingleNote::readJSON(const QJsonObject &json) {
     if (json.contains("id") && json["id"].isDouble())
         this->ID = json["id"].toInt();
 
-    if (json.contains("creation_time") && json["creation_time"].isDouble())
-        this->creationTime = QTime().addSecs(json["creation_time"].toInt());
-    if (json.contains("creation_date") && json["creation_date"].isDouble())
-        this->creationDate = QDate().addDays((json["creation_date"].toInt()));
+    if (json.contains("creation_time") && json["creation_time"].isString())
+        this->creationTime = QTime().fromString(json["creation_time"].toString(), Qt::TextDate);
+    if (json.contains("creation_date") && json["creation_date"].isString())
+        this->creationDate = QDate().fromString(json["creation_date"].toString(), Qt::TextDate);
 
-    if (json.contains("edited_time") && json["edited_time"].isDouble())
-        this->editedTime = QTime().addSecs(json["edited_time"].toInt());
-    if (json.contains("edited_date") && json["edited_date"].isDouble())
-        this->editedDate = QDate().addDays((json["edited_date"].toInt()));
+    if (json.contains("edited_time") && json["edited_time"].isString())
+        this->editedTime = QTime().fromString(json["edited_time"].toString(), Qt::TextDate);
+    if (json.contains("edited_date") && json["edited_date"].isString())
+        this->editedDate = QDate().fromString(json["edited_date"].toString(), Qt::TextDate);
 
     if (json.contains("note_text") && json["note_text"].isString())
         this->text = json["note_text"].toString();
@@ -46,10 +46,11 @@ void SingleNote::readJSON(const QJsonObject &json) {
 
 void SingleNote::writeJSON(QJsonObject &json) const {
     json["id"] = this->ID;
-    json["creation_time"] = QTime(0,0,0).secsTo(this->creationTime);
-    json["creation_date"] = QDate(0,0,0).daysTo(this->creationDate);
-    json["edited_time"] = QTime(0,0,0).secsTo(this->editedTime);
-    json["edited_date"] = QDate(0,0,0).daysTo(this->editedDate);
+    json["creation_time"] = this->creationTime.toString(Qt::TextDate);
+    json["creation_date"] = this->creationDate.toString(Qt::TextDate);
+    json["edited_time"] = this->editedTime.toString(Qt::TextDate);
+    json["edited_date"] = this->editedDate.toString(Qt::TextDate);
+    json["text"] = this->text;
     QJsonArray tagsArray;
     int tagsSize = this->tags.size();
     for (int i = 0; i < tagsSize; i++)
