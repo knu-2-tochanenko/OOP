@@ -17,6 +17,5 @@ This app is going to have listed features:
 * Exporting to .txt files
 * Moving notes to archive
 * Notes type (work, personal)
-* Hierarchal notes
 * Tags
 * Global hotkey
