@@ -35,12 +35,16 @@ private:
     Ui::MainWindow *ui;
     // Vector of notes
     QVector<SingleNote*> notes;
-    QVector<QString> tags;
+    QStringList tags;
 
     int maxID;
 
     bool readJSON(QString filePath);
     bool writeJSON(QString filePath);
+
+    bool checkYN();
+
+    void debugNote(SingleNote *sn);
 };
 
 #endif // MAINWINDOW_H

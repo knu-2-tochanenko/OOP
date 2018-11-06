@@ -6,24 +6,26 @@
 #include <QVector>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QStringList>
 
 class SingleNote {
 private:
-    int id;
+    int ID;
     QTime creationTime;
     QDate creationDate;
     QTime editedTime;
     QDate editedDate;
     QString text;
-    QVector<QString> tags;
+    QStringList tags;
 public:
     SingleNote();
-    SingleNote(QTime creationTime, QDate creationDate, QString text, QVector<QString> tags);
+    SingleNote(int ID, QTime creationTime, QDate creationDate, QString text, QStringList tags);
     SingleNote(const QJsonObject &json);
 
     void readJSON(const QJsonObject &json);
     void writeJSON(QJsonObject &json) const;
 
+    int getID();
     QTime getCreationTime();
     QDate getCreationDate();
     QTime getEditedTime();
@@ -32,6 +34,7 @@ public:
     void setEditedDate(QDate date);
 
     QString getText();
+    QString getTags();
     bool setText(QString string);
 
     bool checkForTag(QString tag);

@@ -4,7 +4,8 @@ SingleNote::SingleNote() {
     // Empty constructor. Nothig special. Please, use writeJSOM fucntion!
 }
 
-SingleNote::SingleNote(QTime creationTime, QDate creationDate, QString text, QVector<QString> tags) {
+SingleNote::SingleNote(int ID, QTime creationTime, QDate creationDate, QString text, QStringList tags) {
+    this->ID = ID;
     this->creationTime = creationTime;
     this->creationDate = creationDate;
     this->editedTime = creationTime;
@@ -19,7 +20,7 @@ SingleNote::SingleNote(const QJsonObject &json) {
 
 void SingleNote::readJSON(const QJsonObject &json) {
     if (json.contains("id") && json["id"].isDouble())
-        this->id = json["id"].toInt();
+        this->ID = json["id"].toInt();
 
     if (json.contains("creation_time") && json["creation_time"].isDouble())
         this->creationTime = QTime().addSecs(json["creation_time"].toInt());
@@ -44,7 +45,7 @@ void SingleNote::readJSON(const QJsonObject &json) {
 }
 
 void SingleNote::writeJSON(QJsonObject &json) const {
-    json["id"] = this->id;
+    json["id"] = this->ID;
     json["creation_time"] = QTime(0,0,0).secsTo(this->creationTime);
     json["creation_date"] = QDate(0,0,0).daysTo(this->creationDate);
     json["edited_time"] = QTime(0,0,0).secsTo(this->editedTime);
@@ -54,6 +55,10 @@ void SingleNote::writeJSON(QJsonObject &json) const {
     for (int i = 0; i < tagsSize; i++)
         tagsArray.push_back(this->tags[i]);
     json["tags"] = tagsArray;
+}
+
+int SingleNote::getID() {
+    return this->ID;
 }
 
 QTime SingleNote::getCreationTime() {
@@ -82,6 +87,13 @@ void SingleNote::setEditedDate(QDate date) {
 
 QString SingleNote::getText() {
     return this->text;
+}
+
+QString SingleNote::getTags() {
+    QString res = "";
+    for (int i = 0; i < this->tags.size(); i++)
+        res += this->tags[i] + " ";
+    return res;
 }
 
 bool SingleNote::setText(QString string) {

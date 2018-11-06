@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->list_tags->addItem("uncategorized");
     ui->list_tags->addItem("work");
     ui->list_tags->addItem("university");
-    this->tags.push_back("uncategorized");
     this->tags.push_back("work");
     this->tags.push_back("university");
     // TODO : Add reading from JSON file
@@ -45,8 +44,10 @@ void MainWindow::addTagFunction() {
         for (int i = 0; i < numberOfTags; i++)
             if (ui->list_tags->item(i)->text() == tagText)
                 hasSame = true;
-        if (!hasSame)
+        if (!hasSame) {
             ui->list_tags->addItem(tagText);
+            this->tags.push_back(tagText);
+        }
         else {
             // If tag is already available
             QMessageBox messageBox;
@@ -70,23 +71,37 @@ void MainWindow::on_button_newNote_clicked() {
     QTime creatingTime = QTime::currentTime();
     QDate creationDate = QDate::currentDate();
     QString text = noteText;
-    QVector<QString> tags;
+    QStringList noteTags;
     int ID = this->maxID + 1;
     this->maxID++;
 
     // Get list of tags
-    //*
     bool moreTags = true;
-    QStringList stringList;
-    int tagsSize = this->tags.size();
-    for (int i = 0; i < tagsSize; i++)
-        stringList.push_back(this->tags[i]);
     while (moreTags) {
-        QString tag = QInputDialog::getItem(this, tr("QInputDialog::getItem()"),
-                                            tr("Season:"), stringList, 0, false, &ok);
-        moreTags = false;
+        // Check if user wants to put some tags
+        if (checkYN()) {
+            // Add new tag
+            QString tag = QInputDialog::getItem(this, tr("QInputDialog::getItem()"),
+                                            tr("Season:"), this->tags, 0, false, &ok);
+            if (noteTags.contains(tag)) {
+                QMessageBox messageBox;
+                messageBox.critical(nullptr,"Error","There is already a \"" + tag + "\" tag!");
+                messageBox.setFixedSize(600,200);
+            }
+            else
+                noteTags.push_back(tag);
+        }
+        else {
+            // End adding tags
+            if (noteTags.size() == 0)
+                noteTags.push_back("uncategorized");
+            moreTags = false;
+        }
     }
-    //*/
+
+    SingleNote *sn = new SingleNote(ID, creatingTime, creationDate, text, noteTags);
+    this->notes.push_back(sn);
+    debugNote(sn);
     // TODO : Make adding new note to JSON tabel
     // TODO : Make new note function
 }
@@ -159,9 +174,33 @@ bool MainWindow::writeJSON(QString filePath) {
     return true;
 }
 
+bool MainWindow::checkYN() {
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Add tags");
+    msgBox.setText("Would you like to add tag?");
+    msgBox.setStandardButtons(QMessageBox::Yes);
+    msgBox.addButton(QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::No);
+    if (msgBox.exec() == QMessageBox::Yes)
+      return true;
+    else
+        return false;
+}
+
+void MainWindow::debugNote(SingleNote *sn) {
+    qDebug() << "ID : " << sn->getID()
+             << "\nCreation time : " << sn->getCreationTime()
+             << "\nCreation date : " << sn->getCreationDate()
+             << "\nEdited time : " << sn->getEditedTime()
+             << "\nEdited date : " << sn->getEditedDate()
+             << "\nText : " << sn->getText()
+             << "\nTags : " << sn->getTags();
+}
+
 void MainWindow::deleteTagItem() {
     int listSize = ui->list_tags->selectedItems().size();
     for (int i = 0; i < listSize; ++i) {
+        // TODO : Check for base tags
         QListWidgetItem *item = ui->list_tags->takeItem(ui->list_tags->currentRow());
         // Unlinck all notes from deleted tag
         delete item;
