@@ -17,6 +17,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
+    //Theme
+    QFile f("../qdarkstyle/style.qss");
+    if (!f.exists()) {
+        printf("Unable to set stylesheet, file not found\n");
+    }
+    else {
+        f.open(QFile::ReadOnly | QFile::Text);
+        QTextStream ts(&f);
+        qApp->setStyleSheet(ts.readAll());
+    }
+    //Theme
+
     // Right button for list
     ui->list_tags->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(ui->list_tags, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
@@ -35,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent) :
         this->maxID = 0;
         qDebug() << "There is no file\n";
     }
+    ui->table_notes->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->table_notes->horizontalHeader()->setStretchLastSection(true);
     runInterface();
 }
 
@@ -249,7 +263,7 @@ void MainWindow::editNote() {
     int notesSize = notes.size();
     SingleNote *noteToEdit;
 
-    int noteID = ui->table_notes->item(currentRow, 4)->text().toInt();
+    int noteID = ui->table_notes->item(currentRow, 0)->text().toInt();
     for (int i = 0; i < notesSize; i++)
         if (notes[i]->getID() == noteID) {
             noteToEdit = notes[i];
@@ -293,7 +307,7 @@ void MainWindow::editNote() {
 
 void MainWindow::deleteNote() {
     int currentRow = ui->table_notes->selectedItems()[0]->row();
-    int noteID = ui->table_notes->item(currentRow, 4)->text().toInt();
+    int noteID = ui->table_notes->item(currentRow, 0)->text().toInt();
     int notesSize = notes.size();
     for (int i = 0; i < notesSize; i++)
         if (this->notes[i]->getID() == noteID) {
@@ -306,7 +320,7 @@ void MainWindow::deleteNote() {
 
 void MainWindow::moveToArchive() {
     int currentRow = ui->table_notes->selectedItems()[0]->row();
-    int noteID = ui->table_notes->item(currentRow, 4)->text().toInt();
+    int noteID = ui->table_notes->item(currentRow, 0)->text().toInt();
     int notesSize = notes.size();
     for (int i = 0; i < notesSize; i++)
         if (this->notes[i]->getID() == noteID) {
@@ -454,11 +468,11 @@ void MainWindow::updateTable() {
         // Insert all notes
         for (int i = 0; i < notesSize; i++) {
             // text time date tags
-            ui->table_notes->setItem(i, 0, new QTableWidgetItem(this->notes[i]->getText()));
+            ui->table_notes->setItem(i, 4, new QTableWidgetItem(this->notes[i]->getText()));
             ui->table_notes->setItem(i, 1, new QTableWidgetItem(this->notes[i]->getEditedTime().toString(Qt::TextDate)));
             ui->table_notes->setItem(i, 2, new QTableWidgetItem(this->notes[i]->getEditedDate().toString(Qt::TextDate)));
             ui->table_notes->setItem(i, 3, new QTableWidgetItem(this->notes[i]->getTags()));
-            ui->table_notes->setItem(i, 4, new QTableWidgetItem(QString::number(this->notes[i]->getID())));
+            ui->table_notes->setItem(i, 0, new QTableWidgetItem(QString::number(this->notes[i]->getID())));
         }
     }
     else {
@@ -483,11 +497,11 @@ void MainWindow::updateTable() {
         // Insert all notes
         for (int i = 0; i < noteListSize; i++) {
             // text time date tags
-            ui->table_notes->setItem(i, 0, new QTableWidgetItem(noteList[i]->getText()));
+            ui->table_notes->setItem(i, 4, new QTableWidgetItem(noteList[i]->getText()));
             ui->table_notes->setItem(i, 1, new QTableWidgetItem(noteList[i]->getEditedTime().toString(Qt::TextDate)));
             ui->table_notes->setItem(i, 2, new QTableWidgetItem(noteList[i]->getEditedDate().toString(Qt::TextDate)));
             ui->table_notes->setItem(i, 3, new QTableWidgetItem(noteList[i]->getTags()));
-            ui->table_notes->setItem(i, 4, new QTableWidgetItem(QString::number(this->notes[i]->getID())));
+            ui->table_notes->setItem(i, 0, new QTableWidgetItem(QString::number(this->notes[i]->getID())));
         }
     }
 }

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1000</width>
     <height>500</height>
    </rect>
   </property>
@@ -18,13 +18,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>800</width>
+    <width>1000</width>
     <height>500</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>800</width>
+    <width>1000</width>
     <height>500</height>
    </size>
   </property>
@@ -44,6 +44,7 @@
     <property name="font">
      <font>
       <family>Century Gothic</family>
+      <pointsize>10</pointsize>
      </font>
     </property>
    </widget>
@@ -52,13 +53,14 @@
      <rect>
       <x>260</x>
       <y>40</y>
-      <width>531</width>
+      <width>721</width>
       <height>371</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Century Gothic</family>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="gridStyle">
@@ -72,7 +74,7 @@
     </property>
     <column>
      <property name="text">
-      <string>Note text</string>
+      <string>ID</string>
      </property>
      <property name="font">
       <font>
@@ -115,7 +117,7 @@
     </column>
     <column>
      <property name="text">
-      <string>ID</string>
+      <string>Text</string>
      </property>
      <property name="font">
       <font>
@@ -170,7 +172,7 @@
    <widget class="QPushButton" name="button_newNote">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>450</x>
       <y>420</y>
       <width>241</width>
       <height>31</height>
@@ -212,9 +214,12 @@
     </property>
    </widget>
    <widget class="QPushButton" name="button_toggleArchive">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>510</x>
+      <x>700</x>
       <y>420</y>
       <width>161</width>
       <height>31</height>
@@ -236,7 +241,7 @@
    <widget class="QPushButton" name="button_backup">
     <property name="geometry">
      <rect>
-      <x>680</x>
+      <x>870</x>
       <y>420</y>
       <width>111</width>
       <height>31</height>
@@ -261,7 +266,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1000</width>
      <height>20</height>
     </rect>
    </property>
