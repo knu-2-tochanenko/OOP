@@ -97,16 +97,28 @@ QString SingleNote::getTags() {
     return res;
 }
 
+QStringList SingleNote::getTagsList() {
+    return this->tags;
+}
+
 bool SingleNote::setText(QString string) {
     this->text = string;
     return true;
 }
 
 bool SingleNote::checkForTag(QString tag) {
-    int vectorSize = this->tags.size();
-    for (int i = 0; i < vectorSize; i++) {
-        if (tag == tags[i])
-            return true;
+    return this->tags.contains(tag);
+}
+
+bool SingleNote::addTag(QString tag) {
+    if (this->tags.size() == 1 && this->tags[0] == "uncategorized") {
+        this->tags.clear();
+        this->tags.push_back(tag);
+        return true;
+    }
+    if (!checkForTag(tag)) {
+        this->tags.push_back(tag);
+        return true;
     }
     return false;
 }

@@ -27,11 +27,16 @@ private slots:
     void on_button_backup_clicked();
 
     void showContextMenu(const QPoint&);
+    void showTableMenu(const QPoint&);
 
     void deleteTagItem();
     void addTagItem();
     void editTagItem();
     void addTagToFilter();
+
+    void editNote();
+    void deleteNote();
+    void moveToArchive();
 
 private:
     Ui::MainWindow *ui;

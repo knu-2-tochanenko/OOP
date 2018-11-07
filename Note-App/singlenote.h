@@ -38,8 +38,10 @@ public:
     bool setText(QString string);
 
     bool checkForTag(QString tag);
+    bool addTag(QString tag);
     bool deleteTag(QString tag);
 
+    QStringList getTagsList();
 };
 
 #endif // SINGLENOTE_H

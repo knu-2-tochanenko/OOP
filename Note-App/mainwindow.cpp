@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "notedialog.h"
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QFile>
@@ -19,11 +20,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->list_tags->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(ui->list_tags, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 
+    ui->table_notes->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->table_notes, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showTableMenu(QPoint)));
+
     ui->list_tags->addItem("uncategorized");
     ui->list_tags->addItem("work");
-    ui->list_tags->addItem("university");
+    ui->list_tags->addItem("personal");
     this->tags.push_back("work");
-    this->tags.push_back("university");
+    this->tags.push_back("personal");
 
     if (!readJSON("backup.json")) {
         // If the is no safe file
@@ -74,43 +78,25 @@ void MainWindow::on_button_backup_clicked() {
 }
 
 void MainWindow::on_button_newNote_clicked() {
-    bool ok;
-    QString noteText = QInputDialog::getMultiLineText(this, tr("New Note"), tr("Note text:"), "default", &ok);
     QTime creatingTime = QTime::currentTime();
     QDate creationDate = QDate::currentDate();
-    QString text = noteText;
+    QString text = "";
     QStringList noteTags;
     int ID = this->maxID + 1;
     this->maxID++;
-
-    // Get list of tags
-    bool moreTags = true;
-    while (moreTags) {
-        // Check if user wants to put some tags
-        if (checkYN()) {
-            // Add new tag
-            QString tag = QInputDialog::getItem(this, tr("Add tag : "),
-                                            tr("Tag:"), this->tags, 0, false, &ok);
-            if (noteTags.contains(tag)) {
-                QMessageBox messageBox;
-                messageBox.critical(nullptr,"Error","There is already a \"" + tag + "\" tag!");
-                messageBox.setFixedSize(600,200);
-            }
-            else
-                noteTags.push_back(tag);
-        }
-        else {
-            // End adding tags
-            if (noteTags.size() == 0)
-                noteTags.push_back("uncategorized");
-            moreTags = false;
-        }
-    }
-
     SingleNote *sn = new SingleNote(ID, creatingTime, creationDate, text, noteTags);
-    this->notes.push_back(sn);
+    noteDialog *nd = new noteDialog(this);
+    nd->addNote(sn);
+    nd->addtags(this->tags);
+    nd->exec();
+    if (sn->getText() == "") {
+        // Don't need to do smth
+    }
+    else {
+        this->notes.push_back(sn);
+    }
+    //}
     debugNote(sn);
-
     runInterface();
 }
 
@@ -130,6 +116,17 @@ void MainWindow::showContextMenu(const QPoint &pos) {
     myMenu.exec(globalPos);
 }
 
+void MainWindow::showTableMenu(const QPoint &pos) {
+    QPoint globalPos = ui->table_notes->mapToGlobal(pos);
+
+    QMenu myMenu;
+    myMenu.addAction("Edit Note", this, SLOT(editNote()));
+    myMenu.addAction("Move to archive", this, SLOT(moveToArchive()));
+    myMenu.addAction("Delete Note",  this, SLOT(deleteNote()));
+
+    myMenu.exec(globalPos);
+}
+
 void MainWindow::addTagItem() {
     addTagFunction();
 }
@@ -139,7 +136,7 @@ void MainWindow::editTagItem() {
     for (int k = 0; k < listSize; ++k) {
         if (ui->list_tags->selectedItems()[k]->text() == "uncategorized"
                 || ui->list_tags->selectedItems()[k]->text() == "work"
-                || ui->list_tags->selectedItems()[k]->text() == "university") {
+                || ui->list_tags->selectedItems()[k]->text() == "personal") {
             QMessageBox messageBox;
             messageBox.critical(nullptr,"Error","You can't edit \"" + ui->list_tags->selectedItems()[k]->text() + "\" tag!");
             messageBox.setFixedSize(600,200);
@@ -198,6 +195,62 @@ void MainWindow::addTagToFilter() {
         }
     }
     runInterface();
+}
+
+void MainWindow::editNote() {
+    int listSize = ui->table_notes->selectedItems().size();
+    int currentRow = ui->table_notes->selectedItems()[0]->row();
+    int notesSize = notes.size();
+    SingleNote *noteToEdit;
+
+    int noteID = ui->table_notes->item(currentRow, 4)->text().toInt();
+    for (int i = 0; i < notesSize; i++)
+        if (notes[i]->getID() == noteID) {
+            noteToEdit = notes[i];
+            break;
+        }
+    QTime creatingTime = noteToEdit->getCreationTime();
+    QDate creationDate = noteToEdit->getCreationDate();
+
+    QString text = noteToEdit->getText();
+
+    QStringList noteTags = noteToEdit->getTagsList();
+    int ID = noteToEdit->getID();
+    SingleNote *sn = new SingleNote(ID, creatingTime, creationDate, text, noteTags);
+    noteDialog *nd = new noteDialog(this);
+    nd->addNote(sn);
+    nd->addtags(this->tags);
+    nd->exec();
+    sn = nd->getExecData();
+    if (sn->getText() == "") {
+        int notesSize = notes.size();
+        for (int i = 0; i < notesSize; i++)
+            if (this->notes[i]->getID() == sn->getID()) {
+                // Remove item
+                this->notes.erase(this->notes.begin() + i);
+                break;
+            }
+    }
+    else {
+        noteToEdit->setText(sn->getText());
+        QStringList tagsListNote = sn->getTagsList();
+        for (int i = 0; i < tagsListNote.size(); i++)
+            if (!noteToEdit->checkForTag(tagsListNote[i]))
+                noteToEdit->addTag(tagsListNote[i]);
+        noteToEdit->setEditedTime(sn->getEditedTime());
+        noteToEdit->setEditedDate(sn->getEditedDate());
+    }
+    debugNote(sn);
+    runInterface();
+//*/
+}
+
+void MainWindow::deleteNote() {
+    // TODO : Delete Note
+}
+
+void MainWindow::moveToArchive() {
+   // TODO : Move to archive
 }
 
 bool MainWindow::readJSON(QString filePath) {
@@ -288,7 +341,7 @@ bool MainWindow::writeJSON(QString filePath) {
     QJsonArray tagArray;
     int tagArraySize = this->tags.size();
     for (int i = 0; i < tagArraySize; i++) {
-        if (this->tags[i] != "work" && this->tags[i] != "university" && this->tags[i] != "uncategorized")
+        if (this->tags[i] != "work" && this->tags[i] != "personal" && this->tags[i] != "uncategorized")
             tagArray.push_back(this->tags[i]);
     }
 
@@ -340,6 +393,7 @@ void MainWindow::updateTable() {
             ui->table_notes->setItem(i, 1, new QTableWidgetItem(this->notes[i]->getEditedTime().toString(Qt::TextDate)));
             ui->table_notes->setItem(i, 2, new QTableWidgetItem(this->notes[i]->getEditedDate().toString(Qt::TextDate)));
             ui->table_notes->setItem(i, 3, new QTableWidgetItem(this->notes[i]->getTags()));
+            ui->table_notes->setItem(i, 4, new QTableWidgetItem(QString::number(this->notes[i]->getID())));
         }
     }
     else {
@@ -368,6 +422,7 @@ void MainWindow::updateTable() {
             ui->table_notes->setItem(i, 1, new QTableWidgetItem(noteList[i]->getEditedTime().toString(Qt::TextDate)));
             ui->table_notes->setItem(i, 2, new QTableWidgetItem(noteList[i]->getEditedDate().toString(Qt::TextDate)));
             ui->table_notes->setItem(i, 3, new QTableWidgetItem(noteList[i]->getTags()));
+            ui->table_notes->setItem(i, 4, new QTableWidgetItem(QString::number(this->notes[i]->getID())));
         }
     }
 }
@@ -412,7 +467,7 @@ void MainWindow::deleteTagItem() {
     for (int i = 0; i < listSize; ++i) {
         if (ui->list_tags->selectedItems()[i]->text() == "uncategorized"
                 || ui->list_tags->selectedItems()[i]->text() == "work"
-                || ui->list_tags->selectedItems()[i]->text() == "university") {
+                || ui->list_tags->selectedItems()[i]->text() == "personal") {
             QMessageBox messageBox;
             messageBox.critical(nullptr,"Error","You can't delete \"" + ui->list_tags->selectedItems()[i]->text() + "\" tag!");
             messageBox.setFixedSize(600,200);
