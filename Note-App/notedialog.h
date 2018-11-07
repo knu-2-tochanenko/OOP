@@ -34,6 +34,7 @@ private:
     QStringList tags;
 
     void displayTags();
+    void displayTime();
 
 };
 

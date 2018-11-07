@@ -17,6 +17,7 @@ noteDialog::~noteDialog() {
 void noteDialog::addNote(SingleNote *note) {
     this->note = note;
     ui->noteText->setText(note->getText());
+    displayTime();
 }
 
 void noteDialog::addtags(QStringList tags) {
@@ -52,6 +53,7 @@ void noteDialog::on_noteButton_addTag_clicked() {
         this->note->addTag(tag);
     }
     displayTags();
+    displayTime();
 }
 
 void noteDialog::on_noteButton_delete_clicked() {
@@ -77,9 +79,12 @@ void noteDialog::on_noteButton_deleteTag_clicked() {
             this->note->addTag("uncategorized");
     }
     displayTags();
+    displayTime();
 }
 
 void noteDialog::on_noteButton_save_clicked() {
+    this->note->setEditedTime(QTime::currentTime());
+    this->note->setEditedDate(QDate::currentDate());
     this->note->setText(ui->noteText->toPlainText());
     this->setAttribute(Qt::WA_DeleteOnClose, true);
     this->close();
@@ -100,4 +105,16 @@ void noteDialog::displayTags() {
         tagsString = "uncategorized";
     }
     ui->label_tags_list->setText(tagsString);
+}
+
+void noteDialog::displayTime() {
+    QString createdTime = "";
+    createdTime += this->note->getCreationTime().toString(Qt::TextDate) + " "
+            + this->note->getCreationDate().toString(Qt::TextDate);
+    ui->label_createdTime->setText(createdTime);
+
+    QString editedTime = "";
+    editedTime += this->note->getEditedTime().toString(Qt::TextDate) + " "
+            + this->note->getEditedDate().toString(Qt::TextDate);
+    ui->label_editedTime->setText(editedTime);
 }

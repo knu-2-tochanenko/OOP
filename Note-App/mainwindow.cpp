@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "singlenoteview.h"
+#include "singlenote.h"
 #include "notedialog.h"
 #include <QInputDialog>
 #include <QMessageBox>
@@ -25,16 +27,16 @@ MainWindow::MainWindow(QWidget *parent) :
     else {
         f.open(QFile::ReadOnly | QFile::Text);
         QTextStream ts(&f);
-        qApp->setStyleSheet(ts.readAll());
+        //qApp->setStyleSheet(ts.readAll());
     }
-    //Theme
+    //End-Theme
 
     // Right button for list
     ui->list_tags->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(ui->list_tags, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 
-    ui->table_notes->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->table_notes, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showTableMenu(QPoint)));
+    ui->listWidget_notes->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->listWidget_notes, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showListMenu(QPoint)));
 
     ui->list_tags->addItem("uncategorized");
     ui->list_tags->addItem("work");
@@ -47,8 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
         this->maxID = 0;
         qDebug() << "There is no file\n";
     }
-    ui->table_notes->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->table_notes->horizontalHeader()->setStretchLastSection(true);
+
     runInterface();
 }
 
@@ -176,8 +177,8 @@ void MainWindow::showContextMenu(const QPoint &pos) {
     myMenu.exec(globalPos);
 }
 
-void MainWindow::showTableMenu(const QPoint &pos) {
-    QPoint globalPos = ui->table_notes->mapToGlobal(pos);
+void MainWindow::showListMenu(const QPoint &pos) {
+    QPoint globalPos = ui->listWidget_notes->mapToGlobal(pos);
 
     QMenu myMenu;
     myMenu.addAction("Edit Note", this, SLOT(editNote()));
@@ -239,7 +240,6 @@ void MainWindow::editTagItem() {
 }
 
 void MainWindow::addTagToFilter() {
-
     if (ui->list_tags->selectedItems()[0]->text() == "uncategorized" && filter.size() > 0)
         filter.clear();
     else {
@@ -258,67 +258,85 @@ void MainWindow::addTagToFilter() {
 }
 
 void MainWindow::editNote() {
-    int listSize = ui->table_notes->selectedItems().size();
-    int currentRow = ui->table_notes->selectedItems()[0]->row();
-    int notesSize = notes.size();
-    SingleNote *noteToEdit;
+    // TODO : REDO
+    int listSize = ui->listWidget_notes->selectedItems().size();
+    for (int z = 0; z < listSize; z++) {
 
-    int noteID = ui->table_notes->item(currentRow, 0)->text().toInt();
-    for (int i = 0; i < notesSize; i++)
-        if (notes[i]->getID() == noteID) {
-            noteToEdit = notes[i];
-            break;
-        }
-    QTime creatingTime = noteToEdit->getCreationTime();
-    QDate creationDate = noteToEdit->getCreationDate();
+        int editID;
+        int listWidgetSize = ui->listWidget_notes->count();
+        for (int i = 0; i < listWidgetSize; i++)
+            if (ui->listWidget_notes->item(i) == ui->listWidget_notes->selectedItems()[z]) {
+                editID = (qobject_cast<singleNoteView*>(ui->listWidget_notes->itemWidget(ui->listWidget_notes->item(ui->listWidget_notes->currentRow()))))->getID();
+            }
 
-    QString text = noteToEdit->getText();
 
-    QStringList noteTags = noteToEdit->getTagsList();
-    int ID = noteToEdit->getID();
-    SingleNote *sn = new SingleNote(ID, creatingTime, creationDate, text, noteTags);
-    noteDialog *nd = new noteDialog(this);
-    nd->addNote(sn);
-    nd->addtags(this->tags);
-    nd->exec();
-    sn = nd->getExecData();
-    if (sn->getText() == "") {
         int notesSize = notes.size();
+        SingleNote *noteToEdit;
+
         for (int i = 0; i < notesSize; i++)
-            if (this->notes[i]->getID() == sn->getID()) {
-                // Remove item
-                this->notes.erase(this->notes.begin() + i);
+            if (notes[i]->getID() == editID) {
+                noteToEdit = notes[i];
                 break;
             }
+        QTime creatingTime = noteToEdit->getCreationTime();
+        QDate creationDate = noteToEdit->getCreationDate();
+
+        QString text = noteToEdit->getText();
+
+        QStringList noteTags = noteToEdit->getTagsList();
+        int ID = noteToEdit->getID();
+        SingleNote *sn = new SingleNote(ID, creatingTime, creationDate, text, noteTags);
+        noteDialog *nd = new noteDialog(this);
+        nd->addNote(sn);
+        nd->addtags(this->tags);
+        nd->exec();
+        sn = nd->getExecData();
+        if (sn->getText() == "") {
+            int notesSize = notes.size();
+            for (int i = 0; i < notesSize; i++)
+                if (this->notes[i]->getID() == sn->getID()) {
+                    // Remove item
+                    this->notes.erase(this->notes.begin() + i);
+                    break;
+                }
+        }
+        else {
+            noteToEdit->setText(sn->getText());
+            QStringList tagsListNote = sn->getTagsList();
+            for (int i = 0; i < tagsListNote.size(); i++)
+                if (!noteToEdit->checkForTag(tagsListNote[i]))
+                    noteToEdit->addTag(tagsListNote[i]);
+            noteToEdit->setEditedTime(sn->getEditedTime());
+            noteToEdit->setEditedDate(sn->getEditedDate());
+        }
+        debugNote(sn);
     }
-    else {
-        noteToEdit->setText(sn->getText());
-        QStringList tagsListNote = sn->getTagsList();
-        for (int i = 0; i < tagsListNote.size(); i++)
-            if (!noteToEdit->checkForTag(tagsListNote[i]))
-                noteToEdit->addTag(tagsListNote[i]);
-        noteToEdit->setEditedTime(sn->getEditedTime());
-        noteToEdit->setEditedDate(sn->getEditedDate());
-    }
-    debugNote(sn);
     runInterface();
 //*/
 }
 
 void MainWindow::deleteNote() {
-    int currentRow = ui->table_notes->selectedItems()[0]->row();
-    int noteID = ui->table_notes->item(currentRow, 0)->text().toInt();
-    int notesSize = notes.size();
-    for (int i = 0; i < notesSize; i++)
-        if (this->notes[i]->getID() == noteID) {
-            // Remove item
-            this->notes.erase(this->notes.begin() + i);
-            break;
-        }
-    runInterface();
+    // TODO : REDO
+    /*
+    int listSize = ui->list_tags->selectedItems().size();
+    for (int z = 0; z < listSize; z++) {
+        int currentRow = ui->table_notes->selectedItems()[z]->row();
+        int noteID = ui->table_notes->item(currentRow, 0)->text().toInt();
+        int notesSize = notes.size();
+        for (int i = 0; i < notesSize; i++)
+            if (this->notes[i]->getID() == noteID) {
+                // Remove item
+                this->notes.erase(this->notes.begin() + i);
+                break;
+            }
+        runInterface();
+    }
+    //*/
 }
 
 void MainWindow::moveToArchive() {
+    // TODO : REDO
+    /*
     int currentRow = ui->table_notes->selectedItems()[0]->row();
     int noteID = ui->table_notes->item(currentRow, 0)->text().toInt();
     int notesSize = notes.size();
@@ -330,6 +348,7 @@ void MainWindow::moveToArchive() {
             break;
         }
     runInterface();
+    //*/
 }
 
 bool MainWindow::readJSON(QString filePath) {
@@ -459,24 +478,23 @@ void MainWindow::debugNote(SingleNote *sn) {
              << "\nTags : " << sn->getTags();
 }
 
-void MainWindow::updateTable() {
-    if (tags.size() == 0) {
-        // Display all notes
+void MainWindow::updateList() {
+    if (filter.size() == 0) {
+        qDebug()<<"1\n";
         int notesSize = this->notes.size();
-        ui->table_notes->setRowCount(0);
-        ui->table_notes->setRowCount(notesSize);
-        // Insert all notes
+        ui->listWidget_notes->clear();
         for (int i = 0; i < notesSize; i++) {
-            // text time date tags
-            ui->table_notes->setItem(i, 4, new QTableWidgetItem(this->notes[i]->getText()));
-            ui->table_notes->setItem(i, 1, new QTableWidgetItem(this->notes[i]->getEditedTime().toString(Qt::TextDate)));
-            ui->table_notes->setItem(i, 2, new QTableWidgetItem(this->notes[i]->getEditedDate().toString(Qt::TextDate)));
-            ui->table_notes->setItem(i, 3, new QTableWidgetItem(this->notes[i]->getTags()));
-            ui->table_notes->setItem(i, 0, new QTableWidgetItem(QString::number(this->notes[i]->getID())));
+            // Add single widget
+            QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget_notes);
+            ui->listWidget_notes->addItem(listWidgetItem);
+            singleNoteView *snv = new singleNoteView;
+            snv->setNote(this->notes[i]);
+            //listWidgetItem->setSizeHint(snv->sizeHint());
+            ui->listWidget_notes->setItemWidget(listWidgetItem, snv);
         }
     }
     else {
-        // Display selected notes
+        qDebug()<<"3\n";
         int notesSize = this->notes.size();
         int filterSize = filter.size();
         QVector<SingleNote*> noteList;
@@ -492,16 +510,15 @@ void MainWindow::updateTable() {
         }
 
         int noteListSize = noteList.size();
-        ui->table_notes->setRowCount(0);
-        ui->table_notes->setRowCount(noteListSize);
-        // Insert all notes
+        ui->listWidget_notes->clear();
         for (int i = 0; i < noteListSize; i++) {
-            // text time date tags
-            ui->table_notes->setItem(i, 4, new QTableWidgetItem(noteList[i]->getText()));
-            ui->table_notes->setItem(i, 1, new QTableWidgetItem(noteList[i]->getEditedTime().toString(Qt::TextDate)));
-            ui->table_notes->setItem(i, 2, new QTableWidgetItem(noteList[i]->getEditedDate().toString(Qt::TextDate)));
-            ui->table_notes->setItem(i, 3, new QTableWidgetItem(noteList[i]->getTags()));
-            ui->table_notes->setItem(i, 0, new QTableWidgetItem(QString::number(this->notes[i]->getID())));
+            // Add single widget
+            QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget_notes);
+            ui->listWidget_notes->addItem(listWidgetItem);
+            singleNoteView *snv = new singleNoteView;
+            snv->setNote(noteList[i]);
+            listWidgetItem->setSizeHint(snv->sizeHint());
+            ui->listWidget_notes->setItemWidget(listWidgetItem, snv);
         }
     }
 }
@@ -531,7 +548,7 @@ bool MainWindow::moveFromArchive(int ID) {
 }
 
 void MainWindow::runInterface() {
-    updateTable();
+    updateList();
     QString labelText = "Notes :";
     if (filter.size() != 0) {
         for (int i = 0; i < filter.size(); i++) {

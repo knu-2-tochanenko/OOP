@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>480</height>
+    <height>485</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>20</x>
      <y>20</y>
      <width>601</width>
-     <height>371</height>
+     <height>331</height>
     </rect>
    </property>
    <property name="font">
@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>70</x>
-     <y>400</y>
+     <y>360</y>
      <width>551</width>
      <height>21</height>
     </rect>
@@ -52,8 +52,8 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>400</y>
-     <width>101</width>
+     <y>360</y>
+     <width>41</width>
      <height>21</height>
     </rect>
    </property>
@@ -153,6 +153,82 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tags_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>390</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Created time :</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_createdTime">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>390</y>
+     <width>131</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>createdTime</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tags_4">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>390</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Edited time :</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_editedTime">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>390</y>
+     <width>231</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>editedTime</string>
    </property>
   </widget>
  </widget>

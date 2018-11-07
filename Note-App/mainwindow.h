@@ -27,7 +27,7 @@ private slots:
     void on_button_backup_clicked();
 
     void showContextMenu(const QPoint&);
-    void showTableMenu(const QPoint&);
+    void showListMenu(const QPoint&);
 
     void deleteTagItem();
     void addTagItem();
@@ -55,7 +55,7 @@ private:
 
     void debugNote(SingleNote *sn);
 
-    void updateTable();
+    void updateList();
 
     bool moveToArchive(int ID);
     bool moveFromArchive(int ID);
