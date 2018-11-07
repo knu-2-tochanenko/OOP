@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QTime>
 #include <QDate>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -74,7 +75,52 @@ void MainWindow::on_button_newTag_clicked() {
 }
 
 void MainWindow::on_button_backup_clicked() {
-    // TODO : Make backup function
+    // Choose backup folder
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                                    "/home",
+                                                    QFileDialog::ShowDirsOnly
+                                                    | QFileDialog::DontResolveSymlinks);
+    dir += "backup.txt";
+
+    QFile backupFile(dir);
+    backupFile.open(QFile::WriteOnly | QFile::Text);
+    QTextStream out(&backupFile);
+
+    // Write all content:
+    out << "Main Notes:\n";
+    int notesSize = this->notes.size();
+    for (int i = 0; i < notesSize; i++) {
+        out << this->notes[i]->getText() << "\n";
+        out << "ID : " << this->notes[i]->getID() << "\n";
+        out << "Tags : " << this->notes[i]->getTags() << "\n";
+        out << "Edited on : " << this->notes[i]->getEditedTime().toString(Qt::TextDate)
+            << " " << this->notes[i]->getEditedDate().toString(Qt::TextDate) << "\n";
+        out << "Created on : " << this->notes[i]->getCreationTime().toString(Qt::TextDate)
+            << " " << this->notes[i]->getCreationDate().toString(Qt::TextDate) << "\n";
+        out << "----------------\n\n";
+    }
+
+    out << "Archived Notes:\n";
+    int archiveSize = this->archive.size();
+    for (int i = 0; i < archiveSize; i++) {
+        out << this->archive[i]->getText() << "\n";
+        out << "ID : " << this->archive[i]->getID() << "\n";
+        out << "Tags : " << this->archive[i]->getTags() << "\n";
+        out << "Edited on : " << this->archive[i]->getEditedTime().toString(Qt::TextDate)
+            << " " << this->archive[i]->getEditedDate().toString(Qt::TextDate) << "\n";
+        out << "Created on : " << this->archive[i]->getCreationTime().toString(Qt::TextDate)
+            << " " << this->archive[i]->getCreationDate().toString(Qt::TextDate) << "\n";
+        out << "----------------\n\n";
+    }
+
+    out << "All tags : uncategorized, work, personal";
+    int tagsSize = this->tags.size();
+    for (int i = 0; i < tagsSize; i++) {
+        out << ", " << this->tags[i];
+    }
+
+    backupFile.flush();
+    backupFile.close();
 }
 
 void MainWindow::on_button_newNote_clicked() {
@@ -246,11 +292,30 @@ void MainWindow::editNote() {
 }
 
 void MainWindow::deleteNote() {
-    // TODO : Delete Note
+    int currentRow = ui->table_notes->selectedItems()[0]->row();
+    int noteID = ui->table_notes->item(currentRow, 4)->text().toInt();
+    int notesSize = notes.size();
+    for (int i = 0; i < notesSize; i++)
+        if (this->notes[i]->getID() == noteID) {
+            // Remove item
+            this->notes.erase(this->notes.begin() + i);
+            break;
+        }
+    runInterface();
 }
 
 void MainWindow::moveToArchive() {
-   // TODO : Move to archive
+    int currentRow = ui->table_notes->selectedItems()[0]->row();
+    int noteID = ui->table_notes->item(currentRow, 4)->text().toInt();
+    int notesSize = notes.size();
+    for (int i = 0; i < notesSize; i++)
+        if (this->notes[i]->getID() == noteID) {
+            // Remove item
+            this->archive.push_back(this->notes[i]);
+            this->notes.erase(this->notes.begin() + i);
+            break;
+        }
+    runInterface();
 }
 
 bool MainWindow::readJSON(QString filePath) {
