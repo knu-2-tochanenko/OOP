@@ -40,6 +40,7 @@ public:
     bool checkForTag(QString tag);
     bool addTag(QString tag);
     bool deleteTag(QString tag);
+    void clearTags();
 
     QStringList getTagsList();
 };

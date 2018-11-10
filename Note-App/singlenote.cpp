@@ -135,3 +135,7 @@ bool SingleNote::deleteTag(QString tag) {
         }
     return false;
 }
+
+void SingleNote::clearTags() {
+    this->tags.clear();
+}

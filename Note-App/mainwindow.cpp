@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     else {
         f.open(QFile::ReadOnly | QFile::Text);
         QTextStream ts(&f);
-        //qApp->setStyleSheet(ts.readAll());
+        qApp->setStyleSheet(ts.readAll());
     }
     //End-Theme
 
@@ -329,6 +329,7 @@ void MainWindow::editNote() {
                 }
         }
         else {
+            noteToEdit->clearTags();
             noteToEdit->setText(sn->getText());
             QStringList tagsListNote = sn->getTagsList();
             for (int i = 0; i < tagsListNote.size(); i++)
