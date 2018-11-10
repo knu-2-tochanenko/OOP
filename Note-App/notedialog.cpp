@@ -45,7 +45,7 @@ void noteDialog::on_noteButton_addTag_clicked() {
     bool ok;
     QString tag = QInputDialog::getItem(this, tr("Add tag : "),
                                     tr("Tag:"), this->tags, 0, false, &ok);
-    if (note->checkForTag(tag)) {
+    if (ok && note->checkForTag(tag)) {
         QErrorMessage *em = new QErrorMessage();
         em->showMessage("There is already a \"" + tag + "\" tag!");
     }

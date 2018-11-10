@@ -22,6 +22,7 @@ public:
 private:
     Ui::singleNoteView *ui;
     SingleNote *note;
+    void paintEvent(QPaintEvent *);
 };
 
 #endif // SINGLENOTEVIEW_H

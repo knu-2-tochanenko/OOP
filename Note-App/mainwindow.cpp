@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow() {
     if (!writeJSON("backup.json")) {
-        qDebug()<<"Backup was corrapted!\n";
+        qDebug()<<"Backup was corrupted!\n";
     }
     delete ui;
 }
@@ -317,7 +317,6 @@ void MainWindow::editNote() {
 }
 
 void MainWindow::deleteNote() {
-    // TODO : REDO
     int listSize = ui->listWidget_notes->selectedItems().size();
     for (int z = 0; z < listSize; z++) {
         int deleteID;
@@ -494,6 +493,7 @@ void MainWindow::updateList() {
             QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget_notes);
             ui->listWidget_notes->addItem(listWidgetItem);
             singleNoteView *snv = new singleNoteView;
+            snv->setStyleSheet("singleNoteView {border-bottom: 1px solid grey}");
             snv->setNote(this->notes[i]);
             listWidgetItem->setSizeHint(QSize(snv->sizeHint().width(), 85));
             ui->listWidget_notes->setItemWidget(listWidgetItem, snv);

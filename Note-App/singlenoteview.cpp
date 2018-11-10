@@ -1,6 +1,9 @@
 #include "singlenoteview.h"
 #include "ui_singlenoteview.h"
 
+#include <QPainter>
+#include <QStyleOption>
+
 singleNoteView::singleNoteView(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::singleNoteView) {
@@ -25,4 +28,11 @@ void singleNoteView::showInformaion() {
 
 int singleNoteView::getID() {
     return this->note->getID();
+}
+
+void singleNoteView::paintEvent(QPaintEvent *) {
+    QStyleOption opt;
+    opt.init(this);
+    QPainter *p = new QPainter(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, p, this);
 }
