@@ -21,22 +21,29 @@ public:
 
     void addTagFunction();
 private slots:
+    // Button actions
     void on_button_newTag_clicked();
     void on_button_newNote_clicked();
-    void on_button_toggleArchive_clicked();
-    void on_button_export_clicked();
 
+    // Context menu actions
     void showContextMenu(const QPoint&);
     void showListMenu(const QPoint&);
 
+    // Actions with tags
     void deleteTagItem();
     void addTagItem();
     void editTagItem();
     void addTagToFilter();
 
+    // Actions with notes
     void editNote();
     void deleteNote();
     void moveToArchive();
+
+    // Toolbar ations
+    void on_actionOpen_Archive_triggered();
+    void on_actionToggle_Theme_triggered();
+    void on_actionExport_to_triggered();
 
 private:
     Ui::MainWindow *ui;

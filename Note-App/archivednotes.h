@@ -36,6 +36,8 @@ private:
 
     void runInterface();
 
+    bool checkYN(QString message, QString titile);
+
 };
 
 #endif // ARCHIVEDNOTES_H

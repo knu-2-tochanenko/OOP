@@ -2,6 +2,7 @@
 #include "ui_archivednotes.h"
 
 #include <QMenu>
+#include <qmessagebox.h>
 
 ArchivedNotes::ArchivedNotes(QWidget *parent) :
     QDialog(parent),
@@ -42,45 +43,47 @@ void ArchivedNotes::showListMenu(const QPoint &pos) {
 void ArchivedNotes::deleteNote() {
     int listSize = ui->listWidget_notes->selectedItems().size();
     for (int z = 0; z < listSize; z++) {
-        int deleteID;
-        int listWidgetSize = ui->listWidget_notes->count();
-        for (int i = 0; i < listWidgetSize; i++)
-            if (ui->listWidget_notes->item(i) == ui->listWidget_notes->selectedItems()[z]) {
-                deleteID = (qobject_cast<singleNoteView*>(ui->listWidget_notes->itemWidget(ui->listWidget_notes->item(ui->listWidget_notes->currentRow()))))->getID();
-            }
-        this->deletedNotes.push_back(deleteID);
-        int notesSize = notes.size();
+        if (checkYN("Do you want to delete note?", "Delete note")) {
+            int deleteID = -1;
+            int listWidgetSize = ui->listWidget_notes->count();
+            for (int i = 0; i < listWidgetSize; i++)
+                if (ui->listWidget_notes->item(i) == ui->listWidget_notes->selectedItems()[z]) {
+                    deleteID = (qobject_cast<singleNoteView*>(ui->listWidget_notes->itemWidget(ui->listWidget_notes->item(ui->listWidget_notes->currentRow()))))->getID();
+                }
+            this->deletedNotes.push_back(deleteID);
+            int notesSize = notes.size();
 
-        for (int i = 0; i < notesSize; i++)
-            if (notes[i]->getID() == deleteID) {
-                // TODO : Add dialog Y/N
-                notes.erase(notes.begin() + i);
-                break;
-            }
-        runInterface();
+            for (int i = 0; i < notesSize; i++)
+                if (notes[i]->getID() == deleteID) {
+                    notes.erase(notes.begin() + i);
+                    break;
+                }
+            runInterface();
+        }
     }
 }
 
 void ArchivedNotes::unarchiveNote() {
     int listSize = ui->listWidget_notes->selectedItems().size();
     for (int z = 0; z < listSize; z++) {
-        int deleteID;
-        int listWidgetSize = ui->listWidget_notes->count();
-        for (int i = 0; i < listWidgetSize; i++)
-            if (ui->listWidget_notes->item(i) == ui->listWidget_notes->selectedItems()[z]) {
-                deleteID = (qobject_cast<singleNoteView*>(ui->listWidget_notes->itemWidget(ui->listWidget_notes->item(ui->listWidget_notes->currentRow()))))->getID();
-            }
+        if (checkYN("Do you want to move Note from archive?", "Move from archive")) {
+            int deleteID = -1;
+            int listWidgetSize = ui->listWidget_notes->count();
+            for (int i = 0; i < listWidgetSize; i++)
+                if (ui->listWidget_notes->item(i) == ui->listWidget_notes->selectedItems()[z]) {
+                    deleteID = (qobject_cast<singleNoteView*>(ui->listWidget_notes->itemWidget(ui->listWidget_notes->item(ui->listWidget_notes->currentRow()))))->getID();
+                }
 
-        this->unarchivedNotes.push_back(deleteID);
-        int notesSize = notes.size();
+            this->unarchivedNotes.push_back(deleteID);
+            int notesSize = notes.size();
 
-        for (int i = 0; i < notesSize; i++)
-            if (notes[i]->getID() == deleteID) {
-                // TODO : Add dialog Y/N
-                notes.erase(notes.begin() + i);
-                break;
-            }
-        runInterface();
+            for (int i = 0; i < notesSize; i++)
+                if (notes[i]->getID() == deleteID) {
+                    notes.erase(notes.begin() + i);
+                    break;
+                }
+            runInterface();
+        }
     }
 }
 
@@ -97,6 +100,19 @@ void ArchivedNotes::runInterface() {
         listWidgetItem->setSizeHint(QSize(snv->sizeHint().width(), 85));
         ui->listWidget_notes->setItemWidget(listWidgetItem, snv);
     }
+}
+
+bool ArchivedNotes::checkYN(QString message, QString title) {
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(title);
+    msgBox.setText(message);
+    msgBox.setStandardButtons(QMessageBox::Yes);
+    msgBox.addButton(QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::No);
+    if (msgBox.exec() == QMessageBox::Yes)
+        return true;
+    else
+        return false;
 }
 
 

@@ -84,7 +84,7 @@ void MainWindow::addTagFunction() {
 void MainWindow::on_button_newTag_clicked() {
     addTagFunction();
 }
-
+/*
 void MainWindow::on_button_export_clicked() {
     // Choose backup folder
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
@@ -133,7 +133,7 @@ void MainWindow::on_button_export_clicked() {
     backupFile.flush();
     backupFile.close();
 }
-
+//*/
 void MainWindow::on_button_newNote_clicked() {
     QTime creatingTime = QTime::currentTime();
     QDate creationDate = QDate::currentDate();
@@ -154,34 +154,6 @@ void MainWindow::on_button_newNote_clicked() {
     }
     //}
     debugNote(sn);
-    runInterface();
-}
-
-void MainWindow::on_button_toggleArchive_clicked() {
-    ArchivedNotes *an = new ArchivedNotes();
-    an->setNotes(this->archive);
-    an->exec();
-
-    QVector<int> deletedNotes = an->getDeletedNotes();
-    QVector<int> unarchivedNotes = an->getUnarchivedNotes();
-
-    if (deletedNotes.size() > 0)
-        for (int j = 0; j < deletedNotes.size(); j++)
-            for (int i = 0; i < archive.size(); i++) {
-                if (this->archive[i]->getID() == deletedNotes[i]) {
-                    archive.erase(archive.begin() + i);
-                    break;
-                }
-            }
-    if (unarchivedNotes.size() > 0)
-        for (int j = 0; j < unarchivedNotes.size(); j++)
-            for (int i = 0; i < archive.size(); i++) {
-                if (this->archive[i]->getID() == unarchivedNotes[i]) {
-                    notes.push_back(archive[i]);
-                    archive.erase(archive.begin() + i);
-                    break;
-                }
-            }
     runInterface();
 }
 
@@ -370,25 +342,61 @@ void MainWindow::deleteNote() {
 void MainWindow::moveToArchive() {
     int listSize = ui->listWidget_notes->selectedItems().size();
     for (int z = 0; z < listSize; z++) {
-        int archiveID = -1;
-        int listWidgetSize = ui->listWidget_notes->count();
-        for (int i = 0; i < listWidgetSize; i++)
-            if (ui->listWidget_notes->item(i) == ui->listWidget_notes->selectedItems()[z]) {
-                archiveID = (qobject_cast<singleNoteView*>(ui->listWidget_notes->itemWidget(ui->listWidget_notes->item(ui->listWidget_notes->currentRow()))))->getID();
-            }
+        if (checkYN("Do you want to move note to archive?", "Move to archive")) {
+            int archiveID = -1;
+            int listWidgetSize = ui->listWidget_notes->count();
+            for (int i = 0; i < listWidgetSize; i++)
+                if (ui->listWidget_notes->item(i) == ui->listWidget_notes->selectedItems()[z]) {
+                    archiveID = (qobject_cast<singleNoteView*>(ui->listWidget_notes->itemWidget(ui->listWidget_notes->item(ui->listWidget_notes->currentRow()))))->getID();
+                }
 
-        int notesSize = notes.size();
+            int notesSize = notes.size();
 
-        for (int i = 0; i < notesSize; i++)
-            if (notes[i]->getID() == archiveID) {
-                // TODO : Add dialog Y/N
-                archive.push_back(notes[i]);
-                notes.erase(notes.begin() + i);
-                break;
-            }
-        runInterface();
+            for (int i = 0; i < notesSize; i++)
+                if (notes[i]->getID() == archiveID) {
+                    archive.push_back(notes[i]);
+                    notes.erase(notes.begin() + i);
+                    break;
+                }
+            runInterface();
+        }
     }
-    qDebug() << archive[0];
+}
+
+void MainWindow::on_actionOpen_Archive_triggered() {
+    ArchivedNotes *an = new ArchivedNotes();
+    an->setNotes(this->archive);
+    an->exec();
+
+    QVector<int> deletedNotes = an->getDeletedNotes();
+    QVector<int> unarchivedNotes = an->getUnarchivedNotes();
+
+    if (deletedNotes.size() > 0)
+        for (int j = 0; j < deletedNotes.size(); j++)
+            for (int i = 0; i < archive.size(); i++) {
+                if (this->archive[i]->getID() == deletedNotes[i]) {
+                    archive.erase(archive.begin() + i);
+                    break;
+                }
+            }
+    if (unarchivedNotes.size() > 0)
+        for (int j = 0; j < unarchivedNotes.size(); j++)
+            for (int i = 0; i < archive.size(); i++) {
+                if (this->archive[i]->getID() == unarchivedNotes[i]) {
+                    notes.push_back(archive[i]);
+                    archive.erase(archive.begin() + i);
+                    break;
+                }
+            }
+    runInterface();
+}
+
+void MainWindow::on_actionToggle_Theme_triggered() {
+    qDebug() << "Toggle theme";
+}
+
+void MainWindow::on_actionExport_to_triggered() {
+    qDebug() << "Open archive";
 }
 
 bool MainWindow::readJSON(QString filePath) {
@@ -415,7 +423,6 @@ bool MainWindow::readJSON(QString filePath) {
         correctJSON = false;
     }
 
-    // TODO : Debug it!
     // Get array of archived notes
     if (jsonObject.contains("archive") && jsonObject["archive"].isArray()) {
         QJsonArray jsonArray = jsonObject["archive"].toArray();
@@ -457,6 +464,8 @@ bool MainWindow::writeJSON(QString filePath) {
     if (!writeNotesFile.open(QFile::WriteOnly))
         return false;
 
+    // TODO : Change ID's and maxID (or not)
+
     // Add notes
     qDebug() << "Add notes!";
     QJsonArray notesArray;
@@ -495,7 +504,6 @@ bool MainWindow::writeJSON(QString filePath) {
 
     qDebug() << "Write to JSON!";
     finalObject["notes"] = notesArray;
-    // TODO : Change ID's and maxID
     finalObject["max_id"] = this->maxID;
     finalObject["tags"] = tagArray;
     finalObject["archive"] = archiveArray;

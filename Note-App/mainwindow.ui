@@ -108,6 +108,9 @@
     <property name="text">
      <string>New Note</string>
     </property>
+    <property name="shortcut">
+     <string>Ctrl+N</string>
+    </property>
    </widget>
    <widget class="QPushButton" name="button_newTag">
     <property name="geometry">
@@ -126,6 +129,9 @@
     </property>
     <property name="text">
      <string>New Tag</string>
+    </property>
+    <property name="shortcut">
+     <string>Ctrl+Shift+N</string>
     </property>
    </widget>
    <widget class="QListWidget" name="listWidget_notes">
