@@ -45,7 +45,8 @@ FORMS += \
     singlenoteview.ui \
     archivednotes.ui
 
-RESOURCES += qdarkstyle/style.qrc
+RESOURCES +=
+        qdarkstyle/style.qrc
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -21,17 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
-    //Theme
-    QFile f("../qdarkstyle/style.qss");
-    if (!f.exists()) {
-        printf("Unable to set stylesheet, file not found\n");
-    }
-    else {
-        f.open(QFile::ReadOnly | QFile::Text);
-        QTextStream ts(&f);
-        qApp->setStyleSheet(ts.readAll());
-    }
-    //End-Theme
+
 
     // Right button for list
     ui->list_tags->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -51,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) :
         this->maxID = 0;
         qDebug() << "There is no file\n";
     }
+
+    setTheme(0);
 
     runInterface();
 }
@@ -609,6 +601,26 @@ void MainWindow::runInterface() {
         }
     }
     ui->label_notes->setText(labelText);
+}
+
+void MainWindow::setTheme(int number) {
+    if (number == 0) {
+        // Default theme
+        return;
+    }
+    if (number == 1) {
+        // QDarkStyle theme
+        QFile f("../qdarkstyle/style.qss");
+        if (!f.exists()) {
+            printf("Unable to set stylesheet, file not found\n");
+        }
+        else {
+            f.open(QFile::ReadOnly | QFile::Text);
+            QTextStream ts(&f);
+            qApp->setStyleSheet(ts.readAll());
+        }
+    }
+
 }
 
 void MainWindow::deleteTagItem() {

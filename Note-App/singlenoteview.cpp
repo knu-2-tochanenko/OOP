@@ -20,7 +20,15 @@ void singleNoteView::setNote(SingleNote *sn) {
 }
 
 void singleNoteView::showInformaion() {
-    ui->text->setText(this->note->getText());
+    QString noteText = this->note->getText();
+    int textSize = noteText.length();
+    for (int i = 0; i < textSize; i++)
+        if (noteText[i] == '\n') {
+            noteText = noteText.left(i);
+        }
+    QFontMetrics metrics(ui->text->font());
+    QString elidedText = metrics.elidedText(noteText, Qt::ElideRight, ui->text->width());
+    ui->text->setText(elidedText);
     ui->tags->setText(this->note->getTags());
     ui->time->setText(this->note->getCreationTime().toString(Qt::TextDate) + " " +
                       this->note->getCreationDate().toString(Qt::TextDate));

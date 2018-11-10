@@ -61,6 +61,8 @@ private:
     bool moveFromArchive(int ID);
 
     void runInterface();
+
+    void setTheme(int number);
 };
 
 #endif // MAINWINDOW_H
