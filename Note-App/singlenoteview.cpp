@@ -13,6 +13,7 @@ singleNoteView::~singleNoteView() {
 
 void singleNoteView::setNote(SingleNote *sn) {
     this->note = sn;
+    showInformaion();
 }
 
 void singleNoteView::showInformaion() {

@@ -489,7 +489,7 @@ void MainWindow::updateList() {
             ui->listWidget_notes->addItem(listWidgetItem);
             singleNoteView *snv = new singleNoteView;
             snv->setNote(this->notes[i]);
-            listWidgetItem->setSizeHint(snv->sizeHint());
+            //listWidgetItem->setSizeHint(snv->sizeHint());
             ui->listWidget_notes->setItemWidget(listWidgetItem, snv);
         }
     }
