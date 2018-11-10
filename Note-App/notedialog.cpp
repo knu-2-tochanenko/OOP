@@ -33,9 +33,9 @@ SingleNote *noteDialog::getExecData() {
     QDate creationDate = this->note->getCreationDate();
     QDate editedDate = QDate::currentDate();
     QString text = ui->noteText->toPlainText();
-    QStringList tags = note->getTagsList();
+    QStringList tagsList = this->note->getTagsList();
 
-    SingleNote *newNote = new SingleNote(ID, creationTime, creationDate, text, tags);
+    SingleNote *newNote = new SingleNote(ID, creationTime, creationDate, text, tagsList);
     newNote->setEditedTime(editedTime);
     newNote->setEditedDate(editedDate);
     return newNote;
@@ -68,7 +68,7 @@ void noteDialog::on_noteButton_deleteTag_clicked() {
     bool ok;
     QString tag = QInputDialog::getItem(this, tr("Add tag : "),
                                     tr("Tag:"), this->tags, 0, false, &ok);
-    if (!this->note->checkForTag(tag)) {
+    if (ok && !this->note->checkForTag(tag)) {
         QErrorMessage *em = new QErrorMessage();
         em->showMessage("There is no \"" + tag + "\" tag!");
     }

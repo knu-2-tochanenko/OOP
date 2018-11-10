@@ -160,6 +160,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="button_export">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>870</x>
