@@ -93,7 +93,7 @@
    <widget class="QPushButton" name="button_newNote">
     <property name="geometry">
      <rect>
-      <x>450</x>
+      <x>740</x>
       <y>610</y>
       <width>241</width>
       <height>31</height>
@@ -107,9 +107,6 @@
     </property>
     <property name="text">
      <string>New Note</string>
-    </property>
-    <property name="shortcut">
-     <string>Ctrl+N</string>
     </property>
    </widget>
    <widget class="QPushButton" name="button_newTag">
@@ -129,59 +126,6 @@
     </property>
     <property name="text">
      <string>New Tag</string>
-    </property>
-    <property name="shortcut">
-     <string>Ctrl+T</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="button_toggleArchive">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>700</x>
-      <y>610</y>
-      <width>161</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Century Gothic</family>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Toggle Archive</string>
-    </property>
-    <property name="shortcut">
-     <string>Ctrl+O</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="button_export">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>870</x>
-      <y>610</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Century Gothic</family>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Export</string>
-    </property>
-    <property name="shortcut">
-     <string>Ctrl+Shift+B</string>
     </property>
    </widget>
    <widget class="QListWidget" name="listWidget_notes">
@@ -225,6 +169,9 @@
    <property name="movable">
     <bool>false</bool>
    </property>
+   <property name="allowedAreas">
+    <set>Qt::TopToolBarArea</set>
+   </property>
    <property name="floatable">
     <bool>false</bool>
    </property>
@@ -234,11 +181,36 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionNew_Note"/>
+   <addaction name="separator"/>
+   <addaction name="actionOpen_Archive"/>
+   <addaction name="separator"/>
+   <addaction name="actionToggle_Theme"/>
+   <addaction name="separator"/>
+   <addaction name="actionExport_to"/>
+   <addaction name="separator"/>
   </widget>
-  <action name="actionNew_Note">
+  <action name="actionToggle_Theme">
    <property name="text">
-    <string>New Note</string>
+    <string>Toggle Theme</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="actionExport_to">
+   <property name="text">
+    <string>Export to...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="actionOpen_Archive">
+   <property name="text">
+    <string>Open Archive</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
    </property>
   </action>
  </widget>

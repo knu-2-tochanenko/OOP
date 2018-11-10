@@ -29,9 +29,9 @@ void noteDialog::addtags(QStringList tags) {
 SingleNote *noteDialog::getExecData() {
     int ID = this->note->getID();
     QTime creationTime = this->note->getCreationTime();
-    QTime editedTime = QTime::currentTime();
     QDate creationDate = this->note->getCreationDate();
-    QDate editedDate = QDate::currentDate();
+    QDate editedDate = this->note->getEditedDate();
+    QTime editedTime = this->note->getEditedTime();
     QString text = ui->noteText->toPlainText();
     QStringList tagsList = this->note->getTagsList();
 
@@ -87,6 +87,7 @@ void noteDialog::on_noteButton_save_clicked() {
     this->note->setText(ui->noteText->toPlainText());
     this->setAttribute(Qt::WA_DeleteOnClose, true);
     this->close();
+    displayTime();
 }
 
 void noteDialog::displayTags() {

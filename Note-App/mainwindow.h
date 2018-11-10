@@ -51,7 +51,7 @@ private:
     bool readJSON(QString filePath);
     bool writeJSON(QString filePath);
 
-    bool checkYN();
+    bool checkYN(QString message, QString title);
 
     void debugNote(SingleNote *sn);
 
