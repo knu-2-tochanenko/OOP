@@ -29,18 +29,21 @@ SOURCES += \
         mainwindow.cpp \
     singlenote.cpp \
     notedialog.cpp \
-    singlenoteview.cpp
+    singlenoteview.cpp \
+    archivednotes.cpp
 
 HEADERS += \
         mainwindow.h \
     singlenote.h \
     notedialog.h \
-    singlenoteview.h
+    singlenoteview.h \
+    archivednotes.h
 
 FORMS += \
         mainwindow.ui \
     notedialog.ui \
-    singlenoteview.ui
+    singlenoteview.ui \
+    archivednotes.ui
 
 RESOURCES += qdarkstyle/style.qrc
 

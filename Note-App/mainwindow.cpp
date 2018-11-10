@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "archivednotes.h"
 #include "singlenoteview.h"
 #include "singlenote.h"
 #include "notedialog.h"
@@ -79,9 +80,8 @@ void MainWindow::addTagFunction() {
         }
         else {
             // If tag is already available
-            QMessageBox messageBox;
-            messageBox.critical(nullptr,"Error","There is already a \"" + tagText + "\" tag!");
-            messageBox.setFixedSize(600,200);
+            QErrorMessage *em = new QErrorMessage();
+            em->showMessage("There is already a \"" + tagText + "\" tag!");
         }
     }
 }
@@ -163,7 +163,30 @@ void MainWindow::on_button_newNote_clicked() {
 }
 
 void MainWindow::on_button_toggleArchive_clicked() {
-    // TODO : Make opening archive window
+    ArchivedNotes *an = new ArchivedNotes();
+    an->setNotes(this->archive);
+    an->exec();
+
+    QVector<int> deletedNotes = an->getDeletedNotes();
+    QVector<int> unarchivedNotes = an->getUnarchivedNotes();
+
+    for (int j = 0; j < deletedNotes.size(); j++)
+        for (int i = 0; i < archive.size(); i++) {
+            if (this->archive[i]->getID() == deletedNotes[i]) {
+                archive.erase(archive.begin() + i);
+                break;
+            }
+        }
+
+    for (int j = 0; j < unarchivedNotes.size(); j++)
+        for (int i = 0; i < archive.size(); i++) {
+            if (this->archive[i]->getID() == unarchivedNotes[i]) {
+                notes.push_back(archive[i]);
+                archive.erase(archive.begin() + i);
+                break;
+            }
+        }
+    runInterface();
 }
 
 void MainWindow::showContextMenu(const QPoint &pos) {
@@ -339,20 +362,26 @@ void MainWindow::deleteNote() {
 }
 
 void MainWindow::moveToArchive() {
-    // TODO : REDO
-    /*
-    int currentRow = ui->table_notes->selectedItems()[0]->row();
-    int noteID = ui->table_notes->item(currentRow, 0)->text().toInt();
-    int notesSize = notes.size();
-    for (int i = 0; i < notesSize; i++)
-        if (this->notes[i]->getID() == noteID) {
-            // Remove item
-            this->archive.push_back(this->notes[i]);
-            this->notes.erase(this->notes.begin() + i);
-            break;
-        }
-    runInterface();
-    //*/
+    int listSize = ui->listWidget_notes->selectedItems().size();
+    for (int z = 0; z < listSize; z++) {
+        int deleteID;
+        int listWidgetSize = ui->listWidget_notes->count();
+        for (int i = 0; i < listWidgetSize; i++)
+            if (ui->listWidget_notes->item(i) == ui->listWidget_notes->selectedItems()[z]) {
+                deleteID = (qobject_cast<singleNoteView*>(ui->listWidget_notes->itemWidget(ui->listWidget_notes->item(ui->listWidget_notes->currentRow()))))->getID();
+            }
+
+        int notesSize = notes.size();
+
+        for (int i = 0; i < notesSize; i++)
+            if (notes[i]->getID() == deleteID) {
+                // TODO : Add dialog Y/N
+                archive.push_back(notes[i]);
+                notes.erase(notes.begin() + i);
+                break;
+            }
+        runInterface();
+    }
 }
 
 bool MainWindow::readJSON(QString filePath) {
@@ -379,6 +408,7 @@ bool MainWindow::readJSON(QString filePath) {
         correctJSON = false;
     }
 
+    // TODO : Debug it!
     // Get array of archived notes
     if (jsonObject.contains("archive") && jsonObject["archive"].isArray()) {
         QJsonArray jsonArray = jsonObject["archive"].toArray();
@@ -435,7 +465,7 @@ bool MainWindow::writeJSON(QString filePath) {
     QJsonObject archiveObject;
     for (int i = 0; i < archiveSize; i++) {
         notes[i]->writeJSON(archiveObject);
-        notesArray.push_back(archiveObject);
+        archiveArray.push_back(archiveObject);
     }
 
     // Add tags
@@ -451,7 +481,7 @@ bool MainWindow::writeJSON(QString filePath) {
     // TODO : Change ID's and maxID
     finalObject["max_id"] = this->maxID;
     finalObject["tags"] = tagArray;
-    finalObject["archive"] = archiveObject;
+    finalObject["archive"] = archiveArray;
 
 
     QJsonDocument document(finalObject);
@@ -461,6 +491,7 @@ bool MainWindow::writeJSON(QString filePath) {
 }
 
 bool MainWindow::checkYN() {
+    // TODO : Get it to needed places
     QMessageBox msgBox;
     msgBox.setWindowTitle("Add tags");
     msgBox.setText("Would you like to add tag?");
