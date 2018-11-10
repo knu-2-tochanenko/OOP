@@ -493,7 +493,7 @@ void MainWindow::updateList() {
             QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget_notes);
             ui->listWidget_notes->addItem(listWidgetItem);
             singleNoteView *snv = new singleNoteView;
-            snv->setStyleSheet("singleNoteView {border-bottom: 1px solid grey}");
+            snv->setStyleSheet("singleNoteView {border-bottom: 1px solid #BDBDBD}");
             snv->setNote(this->notes[i]);
             listWidgetItem->setSizeHint(QSize(snv->sizeHint().width(), 85));
             ui->listWidget_notes->setItemWidget(listWidgetItem, snv);
