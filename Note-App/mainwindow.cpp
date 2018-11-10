@@ -170,22 +170,23 @@ void MainWindow::on_button_toggleArchive_clicked() {
     QVector<int> deletedNotes = an->getDeletedNotes();
     QVector<int> unarchivedNotes = an->getUnarchivedNotes();
 
-    for (int j = 0; j < deletedNotes.size(); j++)
-        for (int i = 0; i < archive.size(); i++) {
-            if (this->archive[i]->getID() == deletedNotes[i]) {
-                archive.erase(archive.begin() + i);
-                break;
+    if (deletedNotes.size() > 0)
+        for (int j = 0; j < deletedNotes.size(); j++)
+            for (int i = 0; i < archive.size(); i++) {
+                if (this->archive[i]->getID() == deletedNotes[i]) {
+                    archive.erase(archive.begin() + i);
+                    break;
+                }
             }
-        }
-
-    for (int j = 0; j < unarchivedNotes.size(); j++)
-        for (int i = 0; i < archive.size(); i++) {
-            if (this->archive[i]->getID() == unarchivedNotes[i]) {
-                notes.push_back(archive[i]);
-                archive.erase(archive.begin() + i);
-                break;
+    if (unarchivedNotes.size() > 0)
+        for (int j = 0; j < unarchivedNotes.size(); j++)
+            for (int i = 0; i < archive.size(); i++) {
+                if (this->archive[i]->getID() == unarchivedNotes[i]) {
+                    notes.push_back(archive[i]);
+                    archive.erase(archive.begin() + i);
+                    break;
+                }
             }
-        }
     runInterface();
 }
 
@@ -364,17 +365,17 @@ void MainWindow::deleteNote() {
 void MainWindow::moveToArchive() {
     int listSize = ui->listWidget_notes->selectedItems().size();
     for (int z = 0; z < listSize; z++) {
-        int deleteID;
+        int archiveID;
         int listWidgetSize = ui->listWidget_notes->count();
         for (int i = 0; i < listWidgetSize; i++)
             if (ui->listWidget_notes->item(i) == ui->listWidget_notes->selectedItems()[z]) {
-                deleteID = (qobject_cast<singleNoteView*>(ui->listWidget_notes->itemWidget(ui->listWidget_notes->item(ui->listWidget_notes->currentRow()))))->getID();
+                archiveID = (qobject_cast<singleNoteView*>(ui->listWidget_notes->itemWidget(ui->listWidget_notes->item(ui->listWidget_notes->currentRow()))))->getID();
             }
 
         int notesSize = notes.size();
 
         for (int i = 0; i < notesSize; i++)
-            if (notes[i]->getID() == deleteID) {
+            if (notes[i]->getID() == archiveID) {
                 // TODO : Add dialog Y/N
                 archive.push_back(notes[i]);
                 notes.erase(notes.begin() + i);
@@ -382,6 +383,7 @@ void MainWindow::moveToArchive() {
             }
         runInterface();
     }
+    qDebug() << archive[0];
 }
 
 bool MainWindow::readJSON(QString filePath) {

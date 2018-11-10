@@ -18,6 +18,7 @@ ArchivedNotes::~ArchivedNotes() {
 
 void ArchivedNotes::setNotes(QVector<SingleNote *> notesList) {
     this->notes = notesList;
+    runInterface();
 }
 
 QVector<int> ArchivedNotes::getUnarchivedNotes() {
