@@ -24,7 +24,7 @@ private slots:
     void on_button_newTag_clicked();
     void on_button_newNote_clicked();
     void on_button_toggleArchive_clicked();
-    void on_button_backup_clicked();
+    void on_button_export_clicked();
 
     void showContextMenu(const QPoint&);
     void showListMenu(const QPoint&);

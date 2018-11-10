@@ -159,7 +159,7 @@
      <string>Ctrl+O</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="button_backup">
+   <widget class="QPushButton" name="button_export">
     <property name="geometry">
      <rect>
       <x>870</x>
@@ -175,7 +175,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Backup Notes</string>
+     <string>Export</string>
     </property>
     <property name="shortcut">
      <string>Ctrl+Shift+B</string>

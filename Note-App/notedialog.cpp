@@ -3,6 +3,7 @@
 
 #include <QMessageBox>
 #include <QDebug>
+#include <QErrorMessage>
 
 noteDialog::noteDialog(QWidget *parent) :
     QDialog(parent),
@@ -45,9 +46,8 @@ void noteDialog::on_noteButton_addTag_clicked() {
     QString tag = QInputDialog::getItem(this, tr("Add tag : "),
                                     tr("Tag:"), this->tags, 0, false, &ok);
     if (note->checkForTag(tag)) {
-        QMessageBox messageBox;
-        messageBox.critical(nullptr,"Error","There is already a \"" + tag + "\" tag!");
-        messageBox.setFixedSize(600,200);
+        QErrorMessage *em = new QErrorMessage();
+        em->showMessage("There is already a \"" + tag + "\" tag!");
     }
     else {
         this->note->addTag(tag);
@@ -69,9 +69,8 @@ void noteDialog::on_noteButton_deleteTag_clicked() {
     QString tag = QInputDialog::getItem(this, tr("Add tag : "),
                                     tr("Tag:"), this->tags, 0, false, &ok);
     if (!this->note->checkForTag(tag)) {
-        QMessageBox messageBox;
-        messageBox.critical(nullptr,"Error","There is already a \"" + tag + "\" tag!");
-        messageBox.setFixedSize(600,200);
+        QErrorMessage *em = new QErrorMessage();
+        em->showMessage("There is no \"" + tag + "\" tag!");
     }
     else {
         this->note->deleteTag(tag);
