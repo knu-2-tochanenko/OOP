@@ -55,6 +55,8 @@ private:
 
     int maxID;
 
+    int currentTheme;
+
     bool readJSON(QString filePath);
     bool writeJSON(QString filePath);
 

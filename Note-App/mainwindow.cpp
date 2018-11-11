@@ -42,8 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
         qDebug() << "There is no file\n";
     }
 
-    setTheme(0);
-
+    currentTheme = 0;
     runInterface();
 }
 
@@ -392,10 +391,19 @@ void MainWindow::on_actionOpen_Archive_triggered() {
 }
 
 void MainWindow::on_actionToggle_Theme_triggered() {
+    if (currentTheme == 0) {
+        setTheme(1);
+        currentTheme = 1;
+    }
+    else {
+        setTheme(0);
+        currentTheme = 0;
+    }
     qDebug() << "Toggle theme";
 }
 
 void MainWindow::on_actionExport_to_triggered() {
+    // TODO : Make export to txt and PDF
     qDebug() << "Open archive";
 }
 
@@ -621,7 +629,7 @@ void MainWindow::runInterface() {
 
 void MainWindow::setTheme(int number) {
     if (number == 0) {
-        // Default theme
+        qApp->setStyleSheet(styleSheet());
         return;
     }
     if (number == 1) {
