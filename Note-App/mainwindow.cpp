@@ -30,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->listWidget_notes->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->listWidget_notes, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showListMenu(QPoint)));
 
+    ui->toolBar->setContextMenuPolicy(Qt::PreventContextMenu);
+
     ui->list_tags->addItem("uncategorized");
     ui->list_tags->addItem("work");
     ui->list_tags->addItem("personal");
