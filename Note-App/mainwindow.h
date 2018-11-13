@@ -42,8 +42,10 @@ private slots:
 
     // Toolbar ations
     void on_actionOpen_Archive_triggered();
-    void on_actionToggle_Theme_triggered();
     void on_actionExport_to_triggered();
+    void on_actionStandard_triggered();
+    void on_actionDark_triggered();
+    void on_actionOrange_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -15,6 +15,7 @@
 #include <QDate>
 #include <QFileDialog>
 #include <QErrorMessage>
+#include <QMenu>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -29,8 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->listWidget_notes->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->listWidget_notes, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showListMenu(QPoint)));
-
-    ui->toolBar->setContextMenuPolicy(Qt::PreventContextMenu);
 
     ui->list_tags->addItem("uncategorized");
     ui->list_tags->addItem("work");
@@ -392,21 +391,24 @@ void MainWindow::on_actionOpen_Archive_triggered() {
     runInterface();
 }
 
-void MainWindow::on_actionToggle_Theme_triggered() {
-    if (currentTheme == 0) {
-        setTheme(1);
-        currentTheme = 1;
-    }
-    else {
-        setTheme(0);
-        currentTheme = 0;
-    }
-    qDebug() << "Toggle theme";
-}
-
 void MainWindow::on_actionExport_to_triggered() {
     // TODO : Make export to txt and PDF
     qDebug() << "Open archive";
+}
+
+void MainWindow::on_actionStandard_triggered()
+{
+    setTheme(0);
+}
+
+void MainWindow::on_actionDark_triggered()
+{
+    setTheme(1);
+}
+
+void MainWindow::on_actionOrange_triggered()
+{
+    setTheme(2);
 }
 
 bool MainWindow::readJSON(QString filePath) {
@@ -634,19 +636,22 @@ void MainWindow::setTheme(int number) {
         qApp->setStyleSheet(styleSheet());
         return;
     }
-    if (number == 1) {
-        // QDarkStyle theme
-        QFile f("../qdarkstyle/style.qss");
-        if (!f.exists()) {
-            printf("Unable to set stylesheet, file not found\n");
-        }
-        else {
-            f.open(QFile::ReadOnly | QFile::Text);
-            QTextStream ts(&f);
-            qApp->setStyleSheet(ts.readAll());
-        }
-    }
 
+    QString fileName;
+    if (number == 1)
+        fileName = "../qdarkstyle/style.qss";
+    if (number == 2)
+        fileName = "../qssmaster/style.qss";
+
+    // Apply theme
+    QFile f(fileName);
+    if (!f.exists())
+        printf("Unable to set stylesheet, file not found\n");
+    else {
+        f.open(QFile::ReadOnly | QFile::Text);
+        QTextStream ts(&f);
+        qApp->setStyleSheet(ts.readAll());
+    }
 }
 
 void MainWindow::deleteTagItem() {

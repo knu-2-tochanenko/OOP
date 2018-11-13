@@ -167,42 +167,24 @@
      <height>20</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuTheme">
+    <property name="title">
+     <string>Themes</string>
+    </property>
+    <addaction name="actionStandard"/>
+    <addaction name="actionOrange"/>
+    <addaction name="actionDark"/>
+   </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Notes actions...</string>
+    </property>
+    <addaction name="actionExport_to"/>
+    <addaction name="actionOpen_Archive"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menuTheme"/>
   </widget>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
-   <property name="movable">
-    <bool>false</bool>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::TopToolBarArea</set>
-   </property>
-   <property name="floatable">
-    <bool>false</bool>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-   <addaction name="separator"/>
-   <addaction name="actionOpen_Archive"/>
-   <addaction name="separator"/>
-   <addaction name="actionToggle_Theme"/>
-   <addaction name="separator"/>
-   <addaction name="actionExport_to"/>
-   <addaction name="separator"/>
-  </widget>
-  <action name="actionToggle_Theme">
-   <property name="text">
-    <string>Toggle Theme</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+T</string>
-   </property>
-  </action>
   <action name="actionExport_to">
    <property name="text">
     <string>Export to...</string>
@@ -217,6 +199,39 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="actionStandard">
+   <property name="text">
+    <string>Standard</string>
+   </property>
+   <property name="toolTip">
+    <string>Standard</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+1</string>
+   </property>
+  </action>
+  <action name="actionDark">
+   <property name="text">
+    <string>Dark</string>
+   </property>
+   <property name="toolTip">
+    <string>Dark</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+3</string>
+   </property>
+  </action>
+  <action name="actionOrange">
+   <property name="text">
+    <string>Orange</string>
+   </property>
+   <property name="toolTip">
+    <string>Orange</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+2</string>
    </property>
   </action>
  </widget>
