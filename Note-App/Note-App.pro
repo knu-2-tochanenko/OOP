@@ -43,7 +43,7 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui \
-    notedialog.ui \r
+    notedialog.ui \
     singlenoteview.ui \
     archivednotes.ui
 

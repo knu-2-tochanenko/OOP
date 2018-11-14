@@ -1,3 +1,4 @@
+#include "utilityclass.h"
 #include "archivednotes.h"
 #include "ui_archivednotes.h"
 
@@ -43,13 +44,8 @@ void ArchivedNotes::showListMenu(const QPoint &pos) {
 void ArchivedNotes::deleteNote() {
     int listSize = ui->listWidget_notes->selectedItems().size();
     for (int z = 0; z < listSize; z++) {
-        if (checkYN("Do you want to delete note?", "Delete note")) {
-            int deleteID = -1;
-            int listWidgetSize = ui->listWidget_notes->count();
-            for (int i = 0; i < listWidgetSize; i++)
-                if (ui->listWidget_notes->item(i) == ui->listWidget_notes->selectedItems()[z]) {
-                    deleteID = (qobject_cast<singleNoteView*>(ui->listWidget_notes->itemWidget(ui->listWidget_notes->item(ui->listWidget_notes->currentRow()))))->getID();
-                }
+        if (UtilityClass::checkYN("Do you want to delete note?", "Delete note")) {
+            int deleteID = findID(z);
             this->deletedNotes.push_back(deleteID);
             int notesSize = notes.size();
 
@@ -66,14 +62,9 @@ void ArchivedNotes::deleteNote() {
 void ArchivedNotes::unarchiveNote() {
     int listSize = ui->listWidget_notes->selectedItems().size();
     for (int z = 0; z < listSize; z++) {
-        if (checkYN("Do you want to move Note from archive?", "Move from archive")) {
-            int deleteID = -1;
-            int listWidgetSize = ui->listWidget_notes->count();
-            for (int i = 0; i < listWidgetSize; i++)
-                if (ui->listWidget_notes->item(i) == ui->listWidget_notes->selectedItems()[z]) {
-                    deleteID = (qobject_cast<singleNoteView*>(ui->listWidget_notes->itemWidget(ui->listWidget_notes->item(ui->listWidget_notes->currentRow()))))->getID();
-                }
+        if (UtilityClass::checkYN("Do you want to move Note from archive?", "Move from archive")) {
 
+            int deleteID = findID(z);
             this->unarchivedNotes.push_back(deleteID);
             int notesSize = notes.size();
 
@@ -102,17 +93,17 @@ void ArchivedNotes::runInterface() {
     }
 }
 
-bool ArchivedNotes::checkYN(QString message, QString title) {
-    QMessageBox msgBox;
-    msgBox.setWindowTitle(title);
-    msgBox.setText(message);
-    msgBox.setStandardButtons(QMessageBox::Yes);
-    msgBox.addButton(QMessageBox::No);
-    msgBox.setDefaultButton(QMessageBox::No);
-    if (msgBox.exec() == QMessageBox::Yes)
-        return true;
-    else
-        return false;
+int ArchivedNotes::findID(int itemNumber) {
+    int deleteID = -1;
+    int listWidgetSize = ui->listWidget_notes->count();
+    for (int i = 0; i < listWidgetSize; i++)
+        if (ui->listWidget_notes->item(i) == ui->listWidget_notes->selectedItems()[itemNumber]) {
+            deleteID = (qobject_cast<singleNoteView*>
+                        (ui->listWidget_notes->itemWidget
+                         (ui->listWidget_notes->item
+                          (ui->listWidget_notes->currentRow()))))->getID();
+        }
+    return deleteID;
 }
 
 

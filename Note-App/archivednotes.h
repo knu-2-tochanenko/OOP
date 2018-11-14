@@ -38,6 +38,8 @@ private:
 
     bool checkYN(QString message, QString titile);
 
+    int findID(int itemNumber);
+
 };
 
 #endif // ARCHIVEDNOTES_H

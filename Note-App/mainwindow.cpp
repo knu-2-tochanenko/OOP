@@ -315,7 +315,6 @@ void MainWindow::editNote() {
         UtilityClass::debugNote(sn);
     }
     runInterface();
-//*/
 }
 
 void MainWindow::deleteNote() {
@@ -376,7 +375,7 @@ void MainWindow::on_actionOpen_Archive_triggered() {
     if (deletedNotes.size() > 0)
         for (int j = 0; j < deletedNotes.size(); j++)
             for (int i = 0; i < archive.size(); i++) {
-                if (this->archive[i]->getID() == deletedNotes[i]) {
+                if (this->archive[i]->getID() == deletedNotes[j]) {
                     archive.erase(archive.begin() + i);
                     break;
                 }
@@ -384,7 +383,7 @@ void MainWindow::on_actionOpen_Archive_triggered() {
     if (unarchivedNotes.size() > 0)
         for (int j = 0; j < unarchivedNotes.size(); j++)
             for (int i = 0; i < archive.size(); i++) {
-                if (this->archive[i]->getID() == unarchivedNotes[i]) {
+                if (this->archive[i]->getID() == unarchivedNotes[j]) {
                     notes.push_back(archive[i]);
                     archive.erase(archive.begin() + i);
                     break;
