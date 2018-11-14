@@ -34,6 +34,7 @@ private slots:
     void addTagItem();
     void editTagItem();
     void addTagToFilter();
+    void removeTagFromFilter();
 
     // Actions with notes
     void editNote();

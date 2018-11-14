@@ -160,7 +160,10 @@ void MainWindow::showContextMenu(const QPoint &pos) {
     QMenu myMenu;
     myMenu.addAction("New tag", this, SLOT(addTagItem()));
     myMenu.addAction("Edit", this, SLOT(editTagItem()));
-    myMenu.addAction("Add to filter", this, SLOT(addTagToFilter()));
+    if (!this->filter.contains(ui->list_tags->selectedItems()[0]->text()))
+        myMenu.addAction("Add to filter", this, SLOT(addTagToFilter()));
+    else
+        myMenu.addAction("Remove from filter", this, SLOT(removeTagFromFilter()));
     myMenu.addAction("Delete",  this, SLOT(deleteTagItem()));
 
     myMenu.exec(globalPos);
@@ -251,6 +254,28 @@ void MainWindow::addTagToFilter() {
             else {
                 QErrorMessage *em = new QErrorMessage();
                 em->showMessage("There is already \"" + ui->list_tags->selectedItems()[i]->text() + "\" tag!");
+            }
+        }
+    }
+    runInterface();
+}
+
+void MainWindow::removeTagFromFilter() {
+    if (ui->list_tags->selectedItems()[0]->text() == "uncategorized" && filter.size() > 0)
+        filter.clear();
+    else {
+        int listSize = ui->list_tags->selectedItems().size();
+        for (int i = 0; i < listSize; ++i) {
+            if (filter.contains(ui->list_tags->selectedItems()[i]->text()))
+                for (int j = 0; j < filter.size(); j++)
+                    if (filter[j] == ui->list_tags->selectedItems()[i]->text()) {
+                        filter.erase(filter.begin() + j);
+                        break;
+                    }
+                    else continue;
+            else {
+                QErrorMessage *em = new QErrorMessage();
+                em->showMessage("There is no \"" + ui->list_tags->selectedItems()[i]->text() + "\" tag in filter!");
             }
         }
     }
