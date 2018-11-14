@@ -19,5 +19,5 @@ This app has listed features:
 * Notes type (work, personal)
 * Tags
 * Global hotkey
+* Changable themes (white - dark - orange)
 * Exporting to .txt and .pdf files (WIP)
-* Changable themes (white - dark) (WIP)
