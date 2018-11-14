@@ -30,23 +30,32 @@ SOURCES += \
     singlenote.cpp \
     notedialog.cpp \
     singlenoteview.cpp \
-    archivednotes.cpp
+    archivednotes.cpp \
+    utilityclass.cpp
 
 HEADERS += \
         mainwindow.h \
     singlenote.h \
     notedialog.h \
     singlenoteview.h \
-    archivednotes.h
+    archivednotes.h \
+    utilityclass.h
 
 FORMS += \
         mainwindow.ui \
-    notedialog.ui \
+    notedialog.ui \r
     singlenoteview.ui \
     archivednotes.ui
 
 RESOURCES +=
-        qdarkstyle/style.qrc
+        themes/style.qrc
+
+# Add themes folder
+copy_to_build.path = $$OUT_PWD/themes
+copy_to_build.files = themes/*
+
+INSTALLS += \
+    copy_to_build
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

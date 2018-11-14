@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "utilityclass.h"
 #include "archivednotes.h"
 #include "singlenoteview.h"
 #include "singlenote.h"
@@ -147,13 +148,12 @@ void MainWindow::on_button_newNote_clicked() {
     nd->addtags(this->tags);
     nd->exec();
     if (sn->getText() == "") {
-        // Don't need to do smth
+        // Don't need to do anything
     }
     else {
         this->notes.push_back(sn);
     }
-    //}
-    debugNote(sn);
+    UtilityClass::debugNote(sn);
     runInterface();
 }
 
@@ -199,7 +199,12 @@ void MainWindow::editTagItem() {
             for (int i = 0; i < tagSize; i++)
                 if (tags[i] == tagToEdit) {
                     bool ok;
-                    QString tagText = QInputDialog::getText(this, tr("Edit Tag"), tr("Tag name:"), QLineEdit::Normal, ui->list_tags->selectedItems()[k]->text(), &ok);
+                    QString tagText = QInputDialog::getText(
+                                this,
+                                tr("Edit Tag"),
+                                tr("Tag name:"),
+                                QLineEdit::Normal,
+                                ui->list_tags->selectedItems()[k]->text(), &ok);
                     tagText = tagText.toLower();
 
                     if (ok && !tagText.isEmpty()) {
@@ -310,7 +315,7 @@ void MainWindow::editNote() {
             noteToEdit->setEditedTime(sn->getEditedTime());
             noteToEdit->setEditedDate(sn->getEditedDate());
         }
-        debugNote(sn);
+        UtilityClass::debugNote(sn);
     }
     runInterface();
 //*/
@@ -319,7 +324,7 @@ void MainWindow::editNote() {
 void MainWindow::deleteNote() {
     int listSize = ui->listWidget_notes->selectedItems().size();
     for (int z = 0; z < listSize; z++) {
-        if (checkYN("Do you want to delete this note?", "Delete note")) {
+        if (UtilityClass::checkYN("Do you want to delete this note?", "Delete note")) {
             int deleteID = -1;
             int listWidgetSize = ui->listWidget_notes->count();
             for (int i = 0; i < listWidgetSize; i++)
@@ -342,7 +347,7 @@ void MainWindow::deleteNote() {
 void MainWindow::moveToArchive() {
     int listSize = ui->listWidget_notes->selectedItems().size();
     for (int z = 0; z < listSize; z++) {
-        if (checkYN("Do you want to move note to archive?", "Move to archive")) {
+        if (UtilityClass::checkYN("Do you want to move note to archive?", "Move to archive")) {
             int archiveID = -1;
             int listWidgetSize = ui->listWidget_notes->count();
             for (int i = 0; i < listWidgetSize; i++)
@@ -527,29 +532,6 @@ bool MainWindow::writeJSON(QString filePath) {
     return true;
 }
 
-bool MainWindow::checkYN(QString message, QString title) {
-    QMessageBox msgBox;
-    msgBox.setWindowTitle(title);
-    msgBox.setText(message);
-    msgBox.setStandardButtons(QMessageBox::Yes);
-    msgBox.addButton(QMessageBox::No);
-    msgBox.setDefaultButton(QMessageBox::No);
-    if (msgBox.exec() == QMessageBox::Yes)
-      return true;
-    else
-        return false;
-}
-
-void MainWindow::debugNote(SingleNote *sn) {
-    qDebug() << "ID : " << sn->getID()
-             << "\nCreation time : " << sn->getCreationTime()
-             << "\nCreation date : " << sn->getCreationDate()
-             << "\nEdited time : " << sn->getEditedTime()
-             << "\nEdited date : " << sn->getEditedDate()
-             << "\nText : " << sn->getText()
-             << "\nTags : " << sn->getTags();
-}
-
 void MainWindow::updateList() {
     if (filter.size() == 0) {
         qDebug()<<"1\n";
@@ -589,8 +571,9 @@ void MainWindow::updateList() {
             QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget_notes);
             ui->listWidget_notes->addItem(listWidgetItem);
             singleNoteView *snv = new singleNoteView;
+            snv->setStyleSheet("singleNoteView {border-bottom: 1px solid #BDBDBD}");
             snv->setNote(noteList[i]);
-            listWidgetItem->setSizeHint(snv->sizeHint());
+            listWidgetItem->setSizeHint(QSize(snv->sizeHint().width(), 85));
             ui->listWidget_notes->setItemWidget(listWidgetItem, snv);
         }
     }
@@ -639,9 +622,9 @@ void MainWindow::setTheme(int number) {
 
     QString fileName;
     if (number == 1)
-        fileName = "../qdarkstyle/style.qss";
+        fileName = "themes/style.qss";
     if (number == 2)
-        fileName = "../qssmaster/style.qss";
+        fileName = "themes/orange.qss";
 
     // Apply theme
     QFile f(fileName);
@@ -657,7 +640,7 @@ void MainWindow::setTheme(int number) {
 void MainWindow::deleteTagItem() {
     int listSize = ui->list_tags->selectedItems().size();
     for (int i = 0; i < listSize; ++i) {
-        if (checkYN("Do you want to delete this tag?", "Delete tag")) {
+        if (UtilityClass::checkYN("Do you want to delete this tag?", "Delete tag")) {
             if (ui->list_tags->selectedItems()[i]->text() == "uncategorized"
                     || ui->list_tags->selectedItems()[i]->text() == "work"
                     || ui->list_tags->selectedItems()[i]->text() == "personal") {

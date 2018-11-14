@@ -59,14 +59,9 @@ private:
 
     int currentTheme;
 
+    void updateList();
     bool readJSON(QString filePath);
     bool writeJSON(QString filePath);
-
-    bool checkYN(QString message, QString title);
-
-    void debugNote(SingleNote *sn);
-
-    void updateList();
 
     bool moveToArchive(int ID);
     bool moveFromArchive(int ID);

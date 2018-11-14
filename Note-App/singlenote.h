@@ -43,6 +43,11 @@ public:
     void clearTags();
 
     QStringList getTagsList();
+
+    // Overloaded operators
+    bool operator == (SingleNote &sn) {
+        return (this->getID() == sn.getID());
+    }
 };
 
 #endif // SINGLENOTE_H
