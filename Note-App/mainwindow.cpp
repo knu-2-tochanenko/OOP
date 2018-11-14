@@ -49,13 +49,10 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 MainWindow::~MainWindow() {
-    qDebug() << "This is strange";
     if (!writeJSON("backup.json")) {
         qDebug()<<"Backup was corrupted!\n";
     }
-    qDebug() << "Is it ok?";
     delete ui;
-    qDebug() << "Definitely ok!";
 }
 
 // Funciton to add new item
@@ -401,18 +398,15 @@ void MainWindow::on_actionExport_to_triggered() {
     qDebug() << "Open archive";
 }
 
-void MainWindow::on_actionStandard_triggered()
-{
+void MainWindow::on_actionStandard_triggered() {
     setTheme(0);
 }
 
-void MainWindow::on_actionDark_triggered()
-{
+void MainWindow::on_actionDark_triggered() {
     setTheme(1);
 }
 
-void MainWindow::on_actionOrange_triggered()
-{
+void MainWindow::on_actionOrange_triggered() {
     setTheme(2);
 }
 
@@ -484,7 +478,6 @@ bool MainWindow::writeJSON(QString filePath) {
     // TODO : Change ID's and maxID (or not)
 
     // Add notes
-    qDebug() << "Add notes!";
     QJsonArray notesArray;
     int notesSize = notes.size();
     QJsonObject singleNoteObject;
@@ -494,23 +487,15 @@ bool MainWindow::writeJSON(QString filePath) {
     }
 
     // Add archived notes
-    qDebug() << "Add archive!";
     QJsonArray archiveArray;
-    qDebug() << "1!";
     int archiveSize = archive.size();
-    qDebug() << "2!";
     QJsonObject archiveObject;
-    qDebug() << "3!";
     for (int i = 0; i < archiveSize; i++) {
-        qDebug() << i << " - ok";
         archive[i]->writeJSON(archiveObject);
-        qDebug() << i << " - ok writeJSON";
         archiveArray.push_back(archiveObject);
-        qDebug() << i << " - ok pushBack";
     }
 
     // Add tags
-    qDebug() << "Add tags!";
     QJsonObject finalObject;
     QJsonArray tagArray;
     int tagArraySize = this->tags.size();
@@ -519,13 +504,11 @@ bool MainWindow::writeJSON(QString filePath) {
             tagArray.push_back(this->tags[i]);
     }
 
-    qDebug() << "Write to JSON!";
     finalObject["notes"] = notesArray;
     finalObject["max_id"] = this->maxID;
     finalObject["tags"] = tagArray;
     finalObject["archive"] = archiveArray;
 
-    qDebug() << "Close JSON!";
     QJsonDocument document(finalObject);
     writeNotesFile.write(document.toJson());
     writeNotesFile.close();
@@ -534,7 +517,6 @@ bool MainWindow::writeJSON(QString filePath) {
 
 void MainWindow::updateList() {
     if (filter.size() == 0) {
-        qDebug()<<"1\n";
         int notesSize = this->notes.size();
         ui->listWidget_notes->clear();
         for (int i = 0; i < notesSize; i++) {
@@ -549,7 +531,6 @@ void MainWindow::updateList() {
         }
     }
     else {
-        qDebug()<<"3\n";
         int notesSize = this->notes.size();
         int filterSize = filter.size();
         QVector<SingleNote*> noteList;
@@ -577,30 +558,6 @@ void MainWindow::updateList() {
             ui->listWidget_notes->setItemWidget(listWidgetItem, snv);
         }
     }
-}
-
-bool MainWindow::moveToArchive(int ID) {
-    int notesSize = notes.size();
-    for (int i = 0; i < notesSize; i++) {
-        if (notes[i]->getID() == ID) {
-            archive.push_back(notes[i]);
-            notes.erase(notes.begin() + i);
-            return true;
-        }
-    }
-    return false;
-}
-
-bool MainWindow::moveFromArchive(int ID) {
-    int archiveSize = notes.size();
-    for (int i = 0; i < archiveSize; i++) {
-        if (archive[i]->getID() == ID) {
-            notes.push_back(archive[i]);
-            archive.erase(archive.begin() + i);
-            return true;
-        }
-    }
-    return false;
 }
 
 void MainWindow::runInterface() {

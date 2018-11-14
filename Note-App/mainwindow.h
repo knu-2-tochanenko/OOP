@@ -63,9 +63,6 @@ private:
     bool readJSON(QString filePath);
     bool writeJSON(QString filePath);
 
-    bool moveToArchive(int ID);
-    bool moveFromArchive(int ID);
-
     void runInterface();
 
     void setTheme(int number);
