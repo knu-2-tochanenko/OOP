@@ -30,8 +30,8 @@ void singleNoteView::showInformaion() {
     QString elidedText = metrics.elidedText(noteText, Qt::ElideRight, ui->text->width());
     ui->text->setText(elidedText);
     ui->tags->setText(this->note->getTags());
-    ui->time->setText(this->note->getCreationTime().toString(Qt::TextDate) + " " +
-                      this->note->getCreationDate().toString(Qt::TextDate));
+    ui->time->setText(this->note->getEditedTime().toString(Qt::TextDate) + " " +
+                      this->note->getEditedDate().toString(Qt::TextDate));
 }
 
 int singleNoteView::getID() {
