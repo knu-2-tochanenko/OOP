@@ -49,7 +49,7 @@ void noteDialog::on_noteButton_addTag_clicked() {
         QErrorMessage *em = new QErrorMessage();
         em->showMessage("There is already a \"" + tag + "\" tag!");
     }
-    else {
+    else if (ok) {
         this->note->addTag(tag);
     }
     displayTags();
@@ -72,7 +72,7 @@ void noteDialog::on_noteButton_deleteTag_clicked() {
         QErrorMessage *em = new QErrorMessage();
         em->showMessage("There is no \"" + tag + "\" tag!");
     }
-    else {
+    else if (ok) {
         this->note->deleteTag(tag);
         if (this->note->getTagsList().size() == 0)
             this->note->addTag("uncategorized");
