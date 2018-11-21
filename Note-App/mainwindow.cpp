@@ -543,25 +543,15 @@ bool MainWindow::writeJSON(QString filePath) {
 }
 
 void MainWindow::updateList() {
+    // TODO : Add sorting
+    int notesSize = this->notes.size();
+    int filterSize = filter.size();
+    QVector<SingleNote*> noteList;
+
     if (filter.size() == 0) {
-        int notesSize = this->notes.size();
-        ui->listWidget_notes->clear();
-        for (int i = 0; i < notesSize; i++) {
-            // Add single widget
-            QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget_notes);
-            ui->listWidget_notes->addItem(listWidgetItem);
-            singleNoteView *snv = new singleNoteView;
-            snv->setStyleSheet("singleNoteView {border-bottom: 1px solid #BDBDBD}");
-            snv->setNote(this->notes[i]);
-            listWidgetItem->setSizeHint(QSize(snv->sizeHint().width(), 85));
-            ui->listWidget_notes->setItemWidget(listWidgetItem, snv);
-        }
+        noteList = this->notes;
     }
     else {
-        int notesSize = this->notes.size();
-        int filterSize = filter.size();
-        QVector<SingleNote*> noteList;
-
         bool hasAllTags;
         for (int i = 0; i < notesSize; i++) {
             hasAllTags = true;
@@ -571,19 +561,19 @@ void MainWindow::updateList() {
             if (hasAllTags)
                 noteList.push_back(notes[i]);
         }
+    }
 
-        int noteListSize = noteList.size();
-        ui->listWidget_notes->clear();
-        for (int i = 0; i < noteListSize; i++) {
-            // Add single widget
-            QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget_notes);
-            ui->listWidget_notes->addItem(listWidgetItem);
-            singleNoteView *snv = new singleNoteView;
-            snv->setStyleSheet("singleNoteView {border-bottom: 1px solid #BDBDBD}");
-            snv->setNote(noteList[i]);
-            listWidgetItem->setSizeHint(QSize(snv->sizeHint().width(), 85));
-            ui->listWidget_notes->setItemWidget(listWidgetItem, snv);
-        }
+    int noteListSize = noteList.size();
+    ui->listWidget_notes->clear();
+    for (int i = 0; i < noteListSize; i++) {
+        // Add single widget
+        QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget_notes);
+        ui->listWidget_notes->addItem(listWidgetItem);
+        singleNoteView *snv = new singleNoteView;
+        snv->setStyleSheet("singleNoteView {border-bottom: 1px solid #BDBDBD}");
+        snv->setNote(noteList[i]);
+        listWidgetItem->setSizeHint(QSize(snv->sizeHint().width(), 85));
+        ui->listWidget_notes->setItemWidget(listWidgetItem, snv);
     }
 }
 
