@@ -32,7 +32,7 @@ This project uses these third-party libraries:
 * [libHARU](http://libharu.org/)
 * [nlohmann/json](https://github.com/nlohmann/json)
 
-#### How to install these libraries :
+#### How to install libraries :
 1. Download zlib, libpng, libharu and unzip archives. Also rename all folders to contain only lib name (delete lib version or -master postfix)
 2. Install zlib :
 - Run CMake for zlib :
