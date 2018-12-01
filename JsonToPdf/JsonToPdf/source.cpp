@@ -46,7 +46,7 @@ struct SingleNote {
 	string editedTime;
 	string editedDate;
 	vector<string> tags;
-	
+
 	SingleNote(string text, string creationTime, string creationDate,
 		string editedTime, string editedDate, vector<string> tags) {
 		this->text = text;
@@ -94,18 +94,18 @@ private:
 		char *res;
 		res = new char[str.size()];
 		strcpy(res, str.c_str());
-		cout << res << endl;
 		return res;
 	}
 
-	void printNotesText(string const & text, HPDF_Page page) const {
-		// Max length - 57
+	void printTextToPDF(string const & text, HPDF_Doc& pdf, HPDF_Page& page,
+		int const shift, int const maxLength, HPDF_Font font, int fontSize) const {
 		int strLen = text.size(), charStringSize = 0;
 		string charString;
 		for (int i = 0; i < strLen; i++) {
-			if ((text[i] == '\n') || (charString.size() > 56)) {
+			if ((text[i] == '\n') || (charString.size() >= maxLength)) {
 				HPDF_Page_ShowText(page, to_string(charString));
-				HPDF_Page_MoveTextPos(page, 0, -20);
+				page = ifNewPage(pdf, page, (-shift) + 1, font, fontSize);
+				HPDF_Page_MoveTextPos(page, 0, shift);
 				charString = "";
 			}
 			else
@@ -113,17 +113,67 @@ private:
 		}
 		if (charString.size() > 0) {
 			HPDF_Page_ShowText(page, to_string(charString));
-			HPDF_Page_MoveTextPos(page, 0, -20);
+			page = ifNewPage(pdf, page, (-shift) + 1, font, fontSize);
+			HPDF_Page_MoveTextPos(page, 0, shift);
 		}
 	}
 
-	// add &
-	void writeNote(SingleNote* const sn, int shift, HPDF_Doc pdf, HPDF_Page page, HPDF_Font def_font) const {
-		HPDF_Font font = HPDF_GetFont(pdf, font_list[0], NULL);
+	HPDF_Page ifNewPage(HPDF_Doc& pdf, HPDF_Page& page, int height, HPDF_Font font, int fontSize) const {
+		HPDF_Point hp = HPDF_Page_GetCurrentTextPos(page);
+		HPDF_Page newPage;
+		if (hp.y < height * 3) {
+			newPage = HPDF_AddPage(pdf);
+			HPDF_Page_SetFontAndSize(newPage, font, fontSize);
+			HPDF_Page_BeginText(newPage);
 
-		/* print a sample text. */
-		HPDF_Page_SetFontAndSize(page, font, 14);
-		printNotesText(sn->text, page);
+			HPDF_REAL pageHeight;
+			HPDF_REAL pageWidth;
+
+			HPDF_Point hp1 = HPDF_Page_GetCurrentTextPos(newPage);
+
+			pageHeight = HPDF_Page_GetHeight(newPage);
+			pageWidth = HPDF_Page_GetWidth(newPage);
+
+			HPDF_Page_MoveTextPos(newPage, 60, pageHeight - height);
+
+			cout << "New Page : " << hp1.x << " " << hp1.y << endl;
+			cout << "\t\twidth : " << pageWidth << " height : " << pageHeight << endl;
+			return newPage;
+		}
+		cout << "Old Page : " << hp.x << " " << hp.y << endl;
+		return page;
+	}
+
+	// add &
+	void writeNote(SingleNote* const sn, HPDF_Doc& pdf, HPDF_Page& page, HPDF_Font& def_font) const {
+		HPDF_Font regularFont = HPDF_GetFont(pdf, font_list[0], NULL);
+		HPDF_Font italicFont = HPDF_GetFont(pdf, font_list[1], NULL);
+
+		/*	PRINT NOTE TEXT  */
+		HPDF_Page_SetFontAndSize(page, regularFont, 14);
+		printTextToPDF(sn->text, pdf, page, -15, 57, regularFont, 14);
+
+		HPDF_Page_SetFontAndSize(page, italicFont, 10);
+		/*	PRINT NOTE TAGS  */
+		string tags = "Tags : ";
+		for (int i = 0; i < sn->tags.size() - 1; i++)
+			tags += sn->tags[i] + "; ";
+		tags += sn->tags[sn->tags.size() - 1];
+		printTextToPDF(tags, pdf, page, -11, 80, italicFont, 10);
+
+		/*	PRINT NOTE CREATOIN TIME & DATE  */
+		string creationTime = "Creation time : " + sn->creationTime + " - " + sn->creationDate;
+		printTextToPDF(creationTime, pdf, page, -11, 80, italicFont, 10);
+		/*	PRINT NOTE EDITED TIME & DATE  */
+		string editedTime = "Last edited time : " + sn->editedTime + " - " + sn->editedDate;
+		printTextToPDF(editedTime, pdf, page, -11, 80, italicFont, 10);
+
+		/*	DRAW A LINE  */
+		// Can't draw a line with HPDF_Page_LineTo() because it looses focus. Currently is a bug
+		printTextToPDF("________________________________________________________________________________",
+			pdf, page, -11, 80, italicFont, 10);
+
+		HPDF_Page_MoveTextPos(page, 0, -20);
 	}
 
 public:
@@ -155,6 +205,7 @@ public:
 
 		const char *notesText = "Notes";
 		const char *archiveText = "Archived Notes";
+		const char *tagsText = "Tags";
 		HPDF_Doc  pdf;
 		string filename = "D:\\Vladislav\\Documents\\file.pdf";
 		char fname[256];
@@ -164,7 +215,6 @@ public:
 		HPDF_REAL tw;
 		HPDF_REAL height;
 		HPDF_REAL width;
-		HPDF_UINT i;
 
 		pdf = HPDF_New(error_handler, NULL);
 		if (!pdf) {
@@ -183,31 +233,47 @@ public:
 		height = HPDF_Page_GetHeight(page);
 		width = HPDF_Page_GetWidth(page);
 
-		/* Print the title of the page (with positioning center). */
+		/*	NOTES */
 		def_font = HPDF_GetFont(pdf, "Helvetica", NULL);
 		HPDF_Page_SetFontAndSize(page, def_font, 24);
 
 		tw = HPDF_Page_TextWidth(page, notesText);
 		HPDF_Page_BeginText(page);
 		HPDF_Page_TextOut(page, (width - tw) / 2, height - 50, notesText);
-		HPDF_Page_EndText(page);
 
-		// Write notes
-		HPDF_Page_BeginText(page);
-		HPDF_Page_MoveTextPos(page, 60, height - 105);
+		//	Write notes
+		HPDF_Page_MoveTextPos(page, -((width - tw) / 2) + 60, -20);
 		for (int i = 0; i < this->notes.size(); i++)
-			writeNote(this->notes[i], -20, pdf, page, def_font);
-		HPDF_Page_EndText(page);
+			writeNote(this->notes[i], pdf, page, def_font);
 
-		/* Print the title of the page (with positioning center). */
+		/*	ARCHIVED NOTES */
 		def_font = HPDF_GetFont(pdf, "Helvetica", NULL);
 		HPDF_Page_SetFontAndSize(page, def_font, 24);
 
 		tw = HPDF_Page_TextWidth(page, archiveText);
-		HPDF_Page_BeginText(page);
-		HPDF_Page_TextOut(page, (width - tw) / 2, height - 100, archiveText);
-		HPDF_Page_EndText(page);
-		
+		HPDF_Page_MoveTextPos(page, 60, -30);
+		HPDF_Page_TextOut(page, (width - tw) / 2, HPDF_Page_GetCurrentTextPos(page).y, archiveText);
+
+		//	Write archived notes
+		HPDF_Page_MoveTextPos(page, -((width - tw) / 2) + 60, -20);
+		for (int i = 0; i < this->archive.size(); i++)
+			writeNote(this->archive[i], pdf, page, def_font);
+
+		/*	TAGS */
+		def_font = HPDF_GetFont(pdf, "Helvetica", NULL);
+		HPDF_Page_SetFontAndSize(page, def_font, 24);
+
+		tw = HPDF_Page_TextWidth(page, tagsText);
+		HPDF_Page_MoveTextPos(page, 60, -30);
+		HPDF_Page_TextOut(page, (width - tw) / 2, HPDF_Page_GetCurrentTextPos(page).y, tagsText);
+
+		//	Write tags
+		HPDF_Page_MoveTextPos(page, -((width - tw) / 2) + 60, -20);
+		HPDF_Font regularFont = HPDF_GetFont(pdf, font_list[0], NULL);
+		HPDF_Font italicFont = HPDF_GetFont(pdf, font_list[1], NULL);
+		HPDF_Page_SetFontAndSize(page, regularFont, 14);
+		for (int i = 0; i < this->tags.size(); i++)
+			printTextToPDF(this->tags[i], pdf, page, -15, 57, regularFont, 14);
 
 		HPDF_SaveToFile(pdf, fname);
 
@@ -222,7 +288,7 @@ public:
 int main(int argumentsCount, char** arguments) {
 	RJDP rjdp;
 	rjdp.read("backup.json");
-	
+
 	if (argumentsCount == 2)
 		rjdp.generate(arguments[1]);
 	else if (argumentsCount == 4) {
