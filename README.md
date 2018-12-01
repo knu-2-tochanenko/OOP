@@ -24,9 +24,9 @@ This app has listed features:
 
 ### JSON to PDF converting (lab 3)
 [Go to code](https://github.com/tochanenko/knu-2nd-oop/tree/master/JsonToPdf/JsonToPdf)\
-This app will be used int the second university projest as .exe file.\
-The release version vill be included in Note App directory.\
-This project uses these third-party libraries:
+This app will be used in the second university project as .exe file.\
+The release version will be included in Note App directory.\
+This project uses listed third-party libraries:
 * [zlib](http://www.zlib.net/)
 * [libPNG](http://www.libpng.org/)
 * [libHARU](http://libharu.org/)
