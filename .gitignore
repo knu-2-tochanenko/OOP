@@ -20,3 +20,13 @@ Note-App/build-Note-App-Desktop_Qt_5_11_2_MSVC2017_64bit-Debug/
 Note-App/build-Note-App-Desktop_Qt_5_11_2_MinGW_32bit-Debug/
 
 Note-App/build-Note-App-Desktop_Qt_5_11_2_MSVC2017_64bit-Release/
+
+JsonToPdf/\.vs/
+
+JsonToPdf/JsonToPdf/Debug/
+
+JsonToPdf/Debug/
+
+JsonToPdf/JsonToPdf/backup\.json
+
+JsonToPdf/JsonToPdf/json\.hpp
