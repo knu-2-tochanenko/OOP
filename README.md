@@ -36,21 +36,21 @@ This project uses these third-party libraries:
 1. Download zlib, libpng, libharu and unzip archives. Also rename all folders to contain only lib name (delete lib version or -master postfix)
 2. Install zlib :
 - Run CMake for zlib :
-    Generator for project : Visual Studio 2017
-    INSTALL_BIN_DIR : path_to_zlib_folder/bin
-    INSTALL_INC_DIR : path_to_zlib_folder/include
-    INSTALL_LIB_DIR : path_to_zlib_folder/lib
-    INSTALL_MAIN_DIR : path_to_zlib_folder/share/man
+    Generator for project : Visual Studio 2017\
+    INSTALL_BIN_DIR : path_to_zlib_folder/bin\
+    INSTALL_INC_DIR : path_to_zlib_folder/include\
+    INSTALL_LIB_DIR : path_to_zlib_folder/lib\
+    INSTALL_MAIN_DIR : path_to_zlib_folder/share/man\
     INSTALL_PKGCONFIG_DIR : path_to_zlib_folder/pkgconfig
 - Open zlib.sln and build library in Release / Win32
 2. Install libPNG
 - Run CMake for libPNG :
-    Generator for project : Visual Studio 2017
-    Set **Advanced** to true
-    ZLIB_INCLUDE_DIR : path_to_zlib_folder
-    ZLIB_LIBRARY : path_to_zlib_folder/Release/zlib.lib
-    ZLIB_LIBRARY_DEBUG : ZLIB_LIBRARY_DEBUG-NOTFOUND
-    ZLIB_LIBRARY_RELEASE : ZLIB_LIBRARY_RELEASE-NOTFOUND
+    Generator for project : Visual Studio 2017\
+    Set **Advanced** to true\
+    ZLIB_INCLUDE_DIR : path_to_zlib_folder\
+    ZLIB_LIBRARY : path_to_zlib_folder/Release/zlib.lib\
+    ZLIB_LIBRARY_DEBUG : ZLIB_LIBRARY_DEBUG-NOTFOUND\
+    ZLIB_LIBRARY_RELEASE : ZLIB_LIBRARY_RELEASE-NOTFOUND\
     Set to true these configuration parameters : PNG_SHARED, PNG_STATIC, PNG_TESTS, Id-version-script
 - Open libpng.sln and build library in Release / Win32
 3. Install libHARU
