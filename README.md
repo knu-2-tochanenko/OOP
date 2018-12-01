@@ -23,7 +23,7 @@ This app has listed features:
 * Exporting to .txt and .pdf files (WIP)
 
 ### JSON to PDF converting (lab 3)
-[Go to code](https://github.com/tochanenko/knu-2nd-oop/tree/master/JsonToPdf)\
+[Go to code](https://github.com/tochanenko/knu-2nd-oop/tree/master/JsonToPdf/JsonToPdf)\
 This app will be used int the second university projest as .exe file.\
 The release version vill be included in Note App directory.\
 This project uses these third-party libraries:
