@@ -124,6 +124,7 @@ private:
 		if (hp.y < height * 3) {
 			newPage = HPDF_AddPage(pdf);
 			HPDF_Page_SetFontAndSize(newPage, font, fontSize);
+			HPDF_Page_EndText(page);
 			HPDF_Page_BeginText(newPage);
 
 			HPDF_REAL pageHeight;
@@ -198,18 +199,17 @@ public:
 		return true;
 	}
 
-	bool generate(string filepath = "D:/", string username = "", string password = "") {
+	bool generate(string filepath = "D:\\file.pdf", string ownerPassword = "", string userPassword = "") {
 		cout << filepath << endl;
-		cout << username << endl;
-		cout << password << endl;
+		cout << ownerPassword << endl;
+		cout << userPassword << endl;
 
 		const char *notesText = "Notes";
 		const char *archiveText = "Archived Notes";
 		const char *tagsText = "Tags";
 		HPDF_Doc  pdf;
-		string filename = "D:\\Vladislav\\Documents\\file.pdf";
 		char fname[256];
-		strcpy(fname, filename.c_str());
+		strcpy(fname, filepath.c_str());
 		HPDF_Page page;
 		HPDF_Font def_font;
 		HPDF_REAL tw;
@@ -274,12 +274,16 @@ public:
 		HPDF_Page_SetFontAndSize(page, regularFont, 14);
 		for (int i = 0; i < this->tags.size(); i++)
 			printTextToPDF(this->tags[i], pdf, page, -15, 57, regularFont, 14);
+		HPDF_Page_EndText(page);
+
+		// Set passwords
+		if (userPassword != "" && ownerPassword != "")
+			HPDF_SetPassword(pdf, to_string(ownerPassword), to_string(userPassword));
 
 		HPDF_SaveToFile(pdf, fname);
 
-		/* clean up */
+		/*	CLEAN  */
 		HPDF_Free(pdf);
-
 		return true;
 	}
 };
