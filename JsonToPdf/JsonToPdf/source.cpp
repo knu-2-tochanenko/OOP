@@ -16,9 +16,9 @@
 using namespace std;
 
 using json = nlohmann::json;
-//////////////////////////////////////////////////////
 jmp_buf env;
 
+//	This is needed for PDF
 #ifdef HPDF_DLL
 void  __stdcall
 #else
@@ -32,13 +32,14 @@ error_handler(HPDF_STATUS   error_no,
 	longjmp(env, 1);
 }
 
+//	Used fonts
 const char *font_list[] = {
 	"Courier",
 	"Courier-Oblique",
 	NULL
 };
-//////////////////////////////////////////////////////
 
+//	Structure to store single note
 struct SingleNote {
 	string text;
 	string creationTime;
@@ -136,16 +137,11 @@ private:
 			pageWidth = HPDF_Page_GetWidth(newPage);
 
 			HPDF_Page_MoveTextPos(newPage, 60, pageHeight - height);
-
-			cout << "New Page : " << hp1.x << " " << hp1.y << endl;
-			cout << "\t\twidth : " << pageWidth << " height : " << pageHeight << endl;
 			return newPage;
 		}
-		cout << "Old Page : " << hp.x << " " << hp.y << endl;
 		return page;
 	}
 
-	// add &
 	void writeNote(SingleNote* const sn, HPDF_Doc& pdf, HPDF_Page& page, HPDF_Font& def_font) const {
 		HPDF_Font regularFont = HPDF_GetFont(pdf, font_list[0], NULL);
 		HPDF_Font italicFont = HPDF_GetFont(pdf, font_list[1], NULL);
@@ -195,15 +191,10 @@ public:
 
 //		testVecNotes(this->notes, "NOTES");
 //		testVecNotes(this->archive, "ARCHIVE");
-
 		return true;
 	}
 
 	bool generate(string filepath = "D:\\file.pdf", string ownerPassword = "", string userPassword = "") {
-		cout << filepath << endl;
-		cout << ownerPassword << endl;
-		cout << userPassword << endl;
-
 		const char *notesText = "Notes";
 		const char *archiveText = "Archived Notes";
 		const char *tagsText = "Tags";
