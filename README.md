@@ -1,13 +1,13 @@
 # knu-2nd-oop
 
 ### Contents
-* [Graph and IP Adresses (lab 1)](https://github.com/tochanenko/knu-2nd-oop#graph-and-ip-adresses-lab-1)
+* [Graph and IP Addresses (lab 1)](https://github.com/tochanenko/knu-2nd-oop#graph-and-ip-addresses-lab-1)
 * [Note App (lab 2)](https://github.com/tochanenko/knu-2nd-oop#note-app-lab-2)
 * [JSON to PDF converting (lab 3)](https://github.com/tochanenko/knu-2nd-oop#json-to-pdf-converting-lab-3)
 
-### Graph and IP Adresses (lab 1)
+### Graph and IP Addresses (lab 1)
 [Go to code](https://github.com/tochanenko/knu-2nd-oop/tree/master/Graph-IP-Addresses/Graph-IP-Addresses)\
-The first university progect of the second year.\
+The first university project of the second year.\
 The project has two major classes : Graph and IpAddress.\
 The stage of it is mostly done. Please, report a bug, if you've found one.
 
@@ -20,7 +20,7 @@ This app has listed features:
 * Notes type (work, personal)
 * Tags
 * Global hotkey
-* Changable themes (white - dark - orange)
+* Changeable themes (white - dark - orange)
 * Exporting to .pdf file
 
 ### JSON to PDF converting (lab 3)
@@ -60,7 +60,7 @@ This project uses listed third-party libraries:
     - Open libharu.sln and build library in Release / Win32
 4. To this project:
     - VC++ Directories -> Include Directories -> paths to zlib, libpng, libharu directories
-    - VC++ Directories -> LIbrary Directories -> paths to zlib/Release, libpng/Release, libharu/Release directories
+    - VC++ Directories -> Library Directories -> paths to zlib/Release, libpng/Release, libharu/Release directories
     - Linker -> Additional Dependencies -> zlib.lib;libpng16.lib;libhpdf.lib;
     - Download latest [json.hpp](https://github.com/nlohmann/json/releases) file
 5. And now you are good to go!
