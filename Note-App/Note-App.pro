@@ -31,7 +31,8 @@ SOURCES += \
     notedialog.cpp \
     singlenoteview.cpp \
     archivednotes.cpp \
-    utilityclass.cpp
+    utilityclass.cpp \
+    exportdialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,13 +40,15 @@ HEADERS += \
     notedialog.h \
     singlenoteview.h \
     archivednotes.h \
-    utilityclass.h
+    utilityclass.h \
+    exportdialog.h
 
 FORMS += \
         mainwindow.ui \
     notedialog.ui \
     singlenoteview.ui \
-    archivednotes.ui
+    archivednotes.ui \
+    exportdialog.ui
 
 RESOURCES +=
         themes/style.qrc

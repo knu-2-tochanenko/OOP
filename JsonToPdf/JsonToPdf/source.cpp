@@ -290,7 +290,5 @@ int main(int argumentsCount, char** arguments) {
 		rjdp.generate(arguments[1], arguments[2], arguments[3]);
 	}
 	else return 1;
-
-	system("pause");
 	return 0;
 }

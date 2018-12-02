@@ -6,6 +6,7 @@
 #include "singlenoteview.h"
 #include "singlenote.h"
 #include "notedialog.h"
+#include "exportdialog.h"
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QFile>
@@ -421,8 +422,10 @@ void MainWindow::on_actionOpen_Archive_triggered() {
 }
 
 void MainWindow::on_actionExport_to_triggered() {
-    // TODO : Make export to txt and PDF
-    qDebug() << "Open archive";
+    this->writeJSON("backup.json");
+    ExportDialog* exportDialog = new ExportDialog(this);
+    exportDialog->exec();
+    qDebug() << "Export...";
 }
 
 void MainWindow::on_actionStandard_triggered() {
