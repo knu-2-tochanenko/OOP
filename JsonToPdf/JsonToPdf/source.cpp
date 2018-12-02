@@ -1,5 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+/*
+*	Convert .json to PDF with ease!
+*	Author	: Vladyslav Tochanenko
+*	Version	: 1.0
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -122,7 +128,7 @@ private:
 	HPDF_Page ifNewPage(HPDF_Doc& pdf, HPDF_Page& page, int height, HPDF_Font font, int fontSize) const {
 		HPDF_Point hp = HPDF_Page_GetCurrentTextPos(page);
 		HPDF_Page newPage;
-		if (hp.y < height * 3) {
+		if (hp.y < (fontSize + height) * 2.5) {
 			newPage = HPDF_AddPage(pdf);
 			HPDF_Page_SetFontAndSize(newPage, font, fontSize);
 			HPDF_Page_EndText(page);
