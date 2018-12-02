@@ -57,6 +57,11 @@ RESOURCES +=
 copy_to_build.path = $$OUT_PWD/themes
 copy_to_build.files = themes/*
 
+install_exe.path = $$OUT_PWD/pdf
+install_exe.files = pdf/*
+INSTALLS += \
+    install_exe
+
 INSTALLS += \
     copy_to_build
 

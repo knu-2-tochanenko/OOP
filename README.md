@@ -14,13 +14,14 @@ The stage of it is mostly done. Please, report a bug, if you've found one.
 ### Note App (lab 2)
 [Go to code](https://github.com/tochanenko/knu-2nd-oop/tree/master/Note-App)\
 The second university project of the second year.\
+**WARNING** If themes and .exe file are not presented in *Build* directory consider adding `install` as argument in `Build Settings -> Build Steps -> Add Build Step -> Make`\
 This app has listed features:
 * Moving notes to archive
 * Notes type (work, personal)
 * Tags
 * Global hotkey
 * Changable themes (white - dark - orange)
-* Exporting to .txt and .pdf files (WIP)
+* Exporting to .pdf file
 
 ### JSON to PDF converting (lab 3)
 [Go to code](https://github.com/tochanenko/knu-2nd-oop/tree/master/JsonToPdf/JsonToPdf)\

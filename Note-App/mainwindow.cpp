@@ -16,7 +16,6 @@
 #include <QTime>
 #include <QDate>
 #include <QFileDialog>
-#include <QErrorMessage>
 #include <QMenu>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -77,8 +76,7 @@ void MainWindow::addTagFunction() {
         }
         else {
             // If tag is already available
-            QErrorMessage *em = new QErrorMessage();
-            em->showMessage("There is already a \"" + tagText + "\" tag!");
+            UtilityClass::error("There is already a \"" + tagText + "\" tag!");
         }
     }
 }
@@ -194,8 +192,7 @@ void MainWindow::editTagItem() {
         if (ui->list_tags->selectedItems()[k]->text() == "uncategorized"
                 || ui->list_tags->selectedItems()[k]->text() == "work"
                 || ui->list_tags->selectedItems()[k]->text() == "personal") {
-            QErrorMessage *em = new QErrorMessage();
-            em->showMessage("Error","You can't edit \"" + ui->list_tags->selectedItems()[k]->text() + "\" tag!");
+            UtilityClass::error("You can't edit \"" + ui->list_tags->selectedItems()[k]->text() + "\" tag!");
         }
         else {
             QString tagToEdit = ui->list_tags->selectedItems()[k]->text();
@@ -236,8 +233,7 @@ void MainWindow::editTagItem() {
                         }
                         else if (!ok) {
                             // If tag is already available
-                            QErrorMessage *em = new QErrorMessage();
-                            em->showMessage("There is already a \"" + tagText + "\" tag!");
+                            UtilityClass::error("There is already a \"" + tagText + "\" tag!");
                         }
                     }
                     break;
@@ -256,8 +252,7 @@ void MainWindow::addTagToFilter() {
             if (!filter.contains(ui->list_tags->selectedItems()[i]->text()))
                 filter.push_back(ui->list_tags->selectedItems()[i]->text());
             else {
-                QErrorMessage *em = new QErrorMessage();
-                em->showMessage("There is already \"" + ui->list_tags->selectedItems()[i]->text() + "\" tag!");
+                UtilityClass::error("There is already \"" + ui->list_tags->selectedItems()[i]->text() + "\" tag!");
             }
         }
     }
@@ -278,8 +273,7 @@ void MainWindow::removeTagFromFilter() {
                     }
                     else continue;
             else {
-                QErrorMessage *em = new QErrorMessage();
-                em->showMessage("There is no \"" + ui->list_tags->selectedItems()[i]->text() + "\" tag in filter!");
+                UtilityClass::error("There is no \"" + ui->list_tags->selectedItems()[i]->text() + "\" tag in filter!");
             }
         }
     }
@@ -297,8 +291,7 @@ void MainWindow::editNote() {
                 editID = (qobject_cast<singleNoteView*>(ui->listWidget_notes->itemWidget(ui->listWidget_notes->item(ui->listWidget_notes->currentRow()))))->getID();
             }
         if (editID == -1) {
-            QErrorMessage *em = new QErrorMessage();
-            em->showMessage("Oops! Something went wrong...");
+            UtilityClass::error("Oops! Something went wrong...");
         }
 
         int notesSize = notes.size();
@@ -621,8 +614,7 @@ void MainWindow::deleteTagItem() {
             if (ui->list_tags->selectedItems()[i]->text() == "uncategorized"
                     || ui->list_tags->selectedItems()[i]->text() == "work"
                     || ui->list_tags->selectedItems()[i]->text() == "personal") {
-                QErrorMessage *em = new QErrorMessage();
-                em->showMessage("You can't delete \"" + ui->list_tags->selectedItems()[i]->text() + "\" tag!");
+                UtilityClass::error("You can't delete \"" + ui->list_tags->selectedItems()[i]->text() + "\" tag!");
             }
             else {
                 QListWidgetItem *item = ui->list_tags->takeItem(ui->list_tags->currentRow());

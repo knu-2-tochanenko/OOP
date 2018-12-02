@@ -1,9 +1,9 @@
 #include "notedialog.h"
 #include "ui_notedialog.h"
+#include "utilityclass.h"
 
 #include <QMessageBox>
 #include <QDebug>
-#include <QErrorMessage>
 
 noteDialog::noteDialog(QWidget *parent) :
     QDialog(parent),
@@ -46,8 +46,7 @@ void noteDialog::on_noteButton_addTag_clicked() {
     QString tag = QInputDialog::getItem(this, tr("Add tag : "),
                                     tr("Tag:"), this->tags, 0, false, &ok);
     if (ok && note->checkForTag(tag)) {
-        QErrorMessage *em = new QErrorMessage();
-        em->showMessage("There is already a \"" + tag + "\" tag!");
+        UtilityClass::error("There is already a \"" + tag + "\" tag!");
     }
     else if (ok) {
         this->note->addTag(tag);
@@ -69,8 +68,7 @@ void noteDialog::on_noteButton_deleteTag_clicked() {
     QString tag = QInputDialog::getItem(this, tr("Add tag : "),
                                     tr("Tag:"), this->tags, 0, false, &ok);
     if (ok && !this->note->checkForTag(tag)) {
-        QErrorMessage *em = new QErrorMessage();
-        em->showMessage("There is no \"" + tag + "\" tag!");
+        UtilityClass::error("There is no \"" + tag + "\" tag!");
     }
     else if (ok) {
         this->note->deleteTag(tag);

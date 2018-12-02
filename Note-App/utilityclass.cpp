@@ -29,3 +29,10 @@ void UtilityClass::debugNote(SingleNote *sn) {
              << "\nText : " << sn->getText()
              << "\nTags : " << sn->getTags();
 }
+
+void UtilityClass::error(QString message) {
+    QMessageBox messageBox;
+    messageBox.setText(message);
+    messageBox.setIcon(QMessageBox::Warning);
+    messageBox.exec();
+}

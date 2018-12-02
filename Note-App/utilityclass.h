@@ -11,6 +11,7 @@ public:
 
     static bool checkYN(QString message, QString title);
     static void debugNote(SingleNote *sn);
+    static void error(QString message);
 };
 
 #endif // UTILITYCLASS_H

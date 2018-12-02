@@ -1,12 +1,13 @@
 #include "exportdialog.h"
 #include "ui_exportdialog.h"
 
-#include <QErrorMessage>
 #include <QFileDialog>
 #include <QDebug>
 #include <QProcess>
 #include <QStackedWidget>
 #include <fstream>
+#include <QMessageBox>
+#include "utilityclass.h"
 
 using std::ifstream;
 
@@ -31,30 +32,20 @@ void ExportDialog::on_buttonCreate_clicked() {
     file = ui->fileName->text();
     path = ui->path->text();
     if (file == "" || path == "") {
-        QErrorMessage *em = new QErrorMessage();
-        em->showMessage("You need to fill all forms with *!");
+        UtilityClass::error("You need to fill all forms with *!");
         ui->path->setText("");
         ui->fileName->setText("");
         return;
     }
-    if ((userPassword == ownerPassword) ||
+    if (((userPassword == ownerPassword) && userPassword != "") ||
             (userPassword == "" && ownerPassword != "") || (userPassword != "" && ownerPassword == "")) {
-        QErrorMessage *em = new QErrorMessage();
-        em->showMessage("Passwords can't be empty or the same!");
+        UtilityClass::error("Both passwords must be filled and different!");
         ui->userPassword->setText("");
         ui->ownerPassword->setText("");
         return;
     }
 
     QString fullPath = path;
-    /*
-    QString fullPath = "";
-    for (int i = 0; i < path.size(); i++)
-        if (path[i] == '/')
-            fullPath += "\\";
-    else
-            fullPath += path[i];
-    //*/
     fullPath += file + ".pdf";
 
     generatePDF(fullPath, ownerPassword, userPassword);
@@ -111,22 +102,13 @@ bool ExportDialog::doesExist(const QString &fullPath) {
 
 void ExportDialog::generatePDF(const QString &fullPath, const QString &adminPassword, const QString &userPassword) {
     if (adminPassword != "" || userPassword != "") {
-        //  Generate with password
-        /*QString fullProgramPath =QDir::currentPath();
-        fullProgramPath.append("/JsonToPdf.exe");
-        QStringList arguments;
-        //arguments << "fup";
-        arguments << fullPath;
-        arguments << adminPassword;
-        arguments << userPassword;
-        QProcess::startDetached(fullProgramPath, arguments);*/
-        QString command = "JsonToPdf.exe " + fullPath + " " + adminPassword + " " + userPassword;
+        QString command = "pdf/JsonToPdf.exe " + fullPath + " " + adminPassword + " " + userPassword;
         qDebug() << command;
         QProcess::execute(command);
     }
     else {
         //  Generate without password
-        QString command = "JsonToPdf.exe " + fullPath;
+        QString command = "pdf/JsonToPdf.exe " + fullPath;
         qDebug() << command;
         QProcess::execute(command);
     }
