@@ -6,13 +6,13 @@
 * [JSON to PDF converting (lab 3)](#json-to-pdf-converting-lab-3)
 
 ### Graph and IP Addresses (lab 1)
-[Go to code](https://github.com/tochanenko/knu-2nd-oop/tree/master/Algorythms,%20Qt%20and%20Libraries/Graph-IP-Addresses/Graph-IP-Addresses)\
+[Go to code](https://github.com/knu-2nd-tochanenko/OOP/tree/master/Algorithms%2C%20Qt%20and%20Libraries/Graph-IP-Addresses)\
 The first university project of the second year.\
 The project has two major classes : Graph and IpAddress.\
 The stage of it is mostly done. Please, report a bug, if you've found one.
 
 ### Note App (lab 2)
-[Go to code](https://github.com/tochanenko/knu-2nd-oop/tree/master/Algorythms,%20Qt%20and%20Libraries/Note-App)\
+[Go to code](https://github.com/knu-2nd-tochanenko/OOP/tree/master/Algorithms%2C%20Qt%20and%20Libraries/Note-App)\
 The second university project of the second year.\
 **WARNING** If themes and .exe file are not presented in *Build* directory consider adding `install` as argument in `Build Settings -> Build Steps -> Add Build Step -> Make`\
 This app has listed features:
@@ -24,7 +24,7 @@ This app has listed features:
 * Exporting to .pdf file
 
 ### JSON to PDF converting (lab 3)
-[Go to code](https://github.com/tochanenko/knu-2nd-oop/tree/master/Algorythms,%20Qt%20and%20Libraries/JsonToPdf/JsonToPdf)\
+[Go to code](https://github.com/knu-2nd-tochanenko/OOP/tree/master/Algorithms%2C%20Qt%20and%20Libraries/JsonToPdf)\
 This app will be used in the second university project as .exe file.\
 The release version will be included in Note App directory.\
 This project uses listed third-party libraries:
