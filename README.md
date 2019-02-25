@@ -1,17 +1,20 @@
 # Basics of Object Oriented Programming
 
-### Contents
+## Contents
+### 1st term
 * [Graph and IP Addresses (lab 1)](#graph-and-ip-addresses-lab-1)
 * [Note App (lab 2)](#note-app-lab-2)
 * [JSON to PDF converting (lab 3)](#json-to-pdf-converting-lab-3)
+### 2nd Term
+* [Medium UML Diagrams](#medium-uml-diagrams)
 
-### Graph and IP Addresses (lab 1)
+## Graph and IP Addresses (lab 1)
 [Go to code](https://github.com/knu-2nd-tochanenko/OOP/tree/master/Algorithms%2C%20Qt%20and%20Libraries/Graph-IP-Addresses)\
 The first university project of the second year.\
 The project has two major classes : Graph and IpAddress.\
 The stage of it is mostly done. Please, report a bug, if you've found one.
 
-### Note App (lab 2)
+## Note App (lab 2)
 [Go to code](https://github.com/knu-2nd-tochanenko/OOP/tree/master/Algorithms%2C%20Qt%20and%20Libraries/Note-App)\
 The second university project of the second year.\
 **WARNING** If themes and .exe file are not presented in *Build* directory consider adding `install` as argument in `Build Settings -> Build Steps -> Add Build Step -> Make`\
@@ -23,7 +26,7 @@ This app has listed features:
 * Changeable themes (white - dark - orange)
 * Exporting to .pdf file
 
-### JSON to PDF converting (lab 3)
+## JSON to PDF converting (lab 3)
 [Go to code](https://github.com/knu-2nd-tochanenko/OOP/tree/master/Algorithms%2C%20Qt%20and%20Libraries/JsonToPdf)\
 This app will be used in the second university project as .exe file.\
 The release version will be included in Note App directory.\
@@ -33,7 +36,7 @@ This project uses listed third-party libraries:
 * [libHARU](http://libharu.org/)
 * [nlohmann/json](https://github.com/nlohmann/json)
 
-#### How to install libraries :
+### How to install libraries :
 1. Download zlib, libpng, libharu and unzip archives. Also rename all folders to contain only lib name (delete lib version or -master postfix)
 2. Install zlib :
     - Run CMake for zlib :
@@ -64,3 +67,9 @@ This project uses listed third-party libraries:
     - Linker -> Additional Dependencies -> zlib.lib;libpng16.lib;libhpdf.lib;
     - Download latest [json.hpp](https://github.com/nlohmann/json/releases) file
 5. And now you are good to go!
+
+## Medium UML Diagrams
+[Visual Paradigm Project](https://github.com/knu-2nd-tochanenko/OOP/tree/master/UML/1_lab)\
+[Rendered Diagrams (JPG)](https://github.com/knu-2nd-tochanenko/OOP/tree/master/UML/1_lab/images)\
+The first project of second (fourth) term.\
+The task is to create all of 14 diagrams of UML 2.0 standard for [Medium](https://medium.com)
