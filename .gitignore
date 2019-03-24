@@ -38,3 +38,9 @@ JsonToPdf/JsonToPdf/Release/
 JsonToPdf/JsonToPdf/x64/
 
 \.vscode/
+
+UML/2_lab/\.vs/
+
+UML/2_lab/Debug/
+
+UML/2_lab/Refactoring/Debug/

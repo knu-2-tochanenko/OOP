@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Party">
+    <Position X="6" Y="2.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AEAAEgAAAiEAgACABACAAAgAAAAgAAAQACAQEAAAACI=</HashCode>
+      <FileName>party.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="deputiesList" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Parliament">
+    <Position X="0.5" Y="0.5" Width="2" />
+    <AssociationLine Name="partyList" Type="std::vector&lt;_Ty, _Alloc&gt;" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.5" Y="1.346" />
+        <Point X="3.078" Y="1.346" />
+        <Point X="3.078" Y="2.125" />
+        <Point X="4.625" Y="2.125" />
+        <Point X="4.625" Y="1.691" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AGLECAAAIAAQAAQAAICBAIAAAABACAAAAA0AAAAAAAA=</HashCode>
+      <FileName>parliament.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="partyList" />
+      <Field Name="electionLawList" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Law">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAACQAgADAAAAAAAAAAAAAAAAAAAAAQgAAAAA=</HashCode>
+      <FileName>law.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ElectionsLaw">
+    <Position X="9.75" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AABAAIAAAAQQgAXAAIAAAAQAAAAAAAAAABAAQtAAQAA=</HashCode>
+      <FileName>law.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WorkingProcessLaw">
+    <Position X="11.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>gAAAAIEAAAQAgADAAAAAAAAAAAAAAAAACAAAYgEAAAA=</HashCode>
+      <FileName>law.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Deputy">
+    <Position X="3" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAACAAAACABAAAAAgBAAAAAAAAAAAQEAAAAiA=</HashCode>
+      <FileName>deputy.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="std::vector&lt;_Ty, _Alloc&gt;" Collapsed="true">
+    <Position X="4.25" Y="1" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AUIAEIEqCrBsEEBAAOMIAAAyAAUEQBIAhQkwggAFUkI=</HashCode>
+      <FileName>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include\vector</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
