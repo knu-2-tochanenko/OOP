@@ -6,7 +6,6 @@
 
 using std::string;
 
-//	Standard law
 class Law {
 private:
 	int complexity;				/*	Law complexity. [complexity] + 1 = number of days
@@ -14,8 +13,18 @@ private:
 	double neededVotes;			//	Part of notes which are needed to process current law [0.1 - 1]
 	static int MaxID;
 	int ID;
+};
+
+//	Standard law
+class StandardLaw {
+private:
+	int complexity;				/*	Law complexity. [complexity] + 1 = number of days
+									which are needed to process current law */
+	double neededVotes;			//	Part of notes which are needed to process current law [0.1 - 1]
+	static int MaxID;
+	int ID;
 public:
-	Law(int complexity, double neededVotes) {
+	StandardLaw(int complexity, double neededVotes) {
 		this->complexity = complexity;
 		this->neededVotes = neededVotes;
 
@@ -37,7 +46,7 @@ public:
 	}
 };
 
-int Law::MaxID = 0;
+int StandardLaw::MaxID = 0;
 
 //	Elections law
 class ElectionsLaw {

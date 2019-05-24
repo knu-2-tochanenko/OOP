@@ -39,7 +39,7 @@ private:
 	vector<Party*> partyList;					//	List of parties
 	bool partyAvail[MAX_PARTIES];
 
-	vector<Law*> standardLawList;				//	List of standard laws
+	vector<StandardLaw*> standardLawList;				//	List of standard laws
 	bool lawStAvail[MAX_S_LAWS];
 
 	vector<ElectionsLaw*> electionLawList;		//	List of election laws
@@ -69,7 +69,7 @@ private:
 		for (int i = 0; i < lawsSize; i++) {
 			complexity = (rand() % MAX_L_DAYS);
 			neededVotes = (double)(rand() % 10 + 1) / 10.0;
-			Law *newLaw = new Law(complexity, neededVotes);
+			StandardLaw *newLaw = new StandardLaw(complexity, neededVotes);
 			standardLawList.push_back(newLaw);
 			lawStAvail[i] = true;
 		}
