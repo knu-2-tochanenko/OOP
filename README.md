@@ -6,7 +6,8 @@
 * [Note App (lab 2)](#note-app-lab-2)
 * [JSON to PDF converting (lab 3)](#json-to-pdf-converting-lab-3)
 ### 2nd Term
-* [Medium UML Diagrams (lab 1.1)](#medium-uml-diagrams-lab-1)
+* [Medium UML Diagrams (lab 1.1)](#medium-uml-diagrams-lab-1.1)
+* [Refactoring (lab 1.2)](#refactoring-lab-1.2)
 
 ## Graph and IP Addresses (lab 1)
 [Go to code](https://github.com/knu-2nd-tochanenko/OOP/tree/master/Algorithms%2C%20Qt%20and%20Libraries/Graph-IP-Addresses)\
@@ -47,7 +48,7 @@ This project uses listed third-party libraries:
         `INSTALL_MAIN_DIR` : path_to_zlib_folder/share/man\
         `INSTALL_PKGCONFIG_DIR` : path_to_zlib_folder/pkgconfig
     - Open zlib.sln and build library in Release / Win32
-2. Install libPNG
+3. Install libPNG
     - Run CMake for libPNG :
         Generator for project : Visual Studio 2017\
         Set **Advanced** to true\
@@ -57,16 +58,16 @@ This project uses listed third-party libraries:
         `ZLIB_LIBRARY_RELEASE` : ZLIB_LIBRARY_RELEASE-NOTFOUND\
         Set to true these configuration parameters : `PNG_SHARED`, `PNG_STATIC`, `PNG_TESTS`, `Id-version-script`
     - Open libpng.sln and build library in Release / Win32
-3. Install libHARU
+4. Install libHARU
     - Run CMake for libHARU :
         Generator for project : Visual Studio 2017
     - Open libharu.sln and build library in Release / Win32
-4. To this project:
+5. To this project:
     - VC++ Directories -> Include Directories -> paths to zlib, libpng, libharu directories
     - VC++ Directories -> Library Directories -> paths to zlib/Release, libpng/Release, libharu/Release directories
     - Linker -> Additional Dependencies -> zlib.lib;libpng16.lib;libhpdf.lib;
     - Download latest [json.hpp](https://github.com/nlohmann/json/releases) file
-5. And now you are good to go!
+6. And now you are good to go!
 
 ## Medium UML Diagrams (lab 1.1)
 [Visual Paradigm Project](https://github.com/knu-2nd-tochanenko/OOP/tree/master/UML/1_lab)\
