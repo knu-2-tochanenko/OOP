@@ -18,6 +18,7 @@ class Graph {
 protected:
     // List of index - value
     vector<T> elementsToIndex;
+    vector<bool> isUsed;
 
     virtual bool bfs(int ind, int fathers[], int length[], bool used[]) = 0;
 
@@ -41,18 +42,18 @@ public:
 
     // Connects two nodes
     // Returns true if two nodes were connected successfully
-    virtual bool connect(int from, int to) = 0;
+    virtual bool connect(short int from, short int to) = 0;
 
     // Adds new element to graph
     virtual bool add(T value) = 0;
 
     // Returns true if there is given value
-    bool has(T value) override {
+    bool has(T value) {
         return std::find(elementsToIndex.begin(), elementsToIndex.end(), value) != elementsToIndex.end();
     }
 
     // Returns index of value. Use with has function
-    short int index(T value) override {
+    short int index(T value) {
         typename vector<T>::iterator it = std::find(elementsToIndex.begin(), elementsToIndex.end(), value);
         short int ind = -1;
         if (it != elementsToIndex.end())
@@ -76,24 +77,77 @@ private:
     }
 
     bool bfs(int ind, int fathers[], int length[], bool used[]) override {
+        std::queue<int> nodes;
+        int listSize = Graph<T>::elementsToIndex.size();
+        for (int i = 0; i < listSize; i++) {
+            fathers[i] = 0;
+            length[i] = INT_MAX;
+            used[i] = !Graph<T>::isUsed[i];
+        }
 
+        used[ind] = true;
+        fathers[ind] = -1;
+        nodes.push(ind);
+        length[ind] = 0;
+
+        while (!nodes.empty()) {
+            int cur_vertex = nodes.front();
+            nodes.pop();
+
+            //	Scan all connected nodes
+            int numberOfNodes = list[cur_vertex].size();
+            for (int vectorIterator = 0; vectorIterator < numberOfNodes; vectorIterator++) {
+                int connectedNumber = list[cur_vertex][vectorIterator];
+                //	If vertex is not visited
+                if (!used[connectedNumber]) {
+                    used[connectedNumber] = true;
+                    nodes.push(connectedNumber);
+                    length[connectedNumber] = length[cur_vertex] + 1;
+                    fathers[connectedNumber] = cur_vertex;
+                }
+            }
+        }
+        return true;
     }
 
 public:
     bool isConnected() override {
-        
+        int listSize = Graph<T>::elementsToIndex.size();
+        int *fathers = new int[listSize];
+        int *length = new int[listSize];
+        bool *used = new bool[listSize];
+
+        bfs(0, fathers, length, used);
+
+        for (int i = 0; i < listSize; i++)
+            if (!used[i])
+                return false;
+        return true;
     }
 
     int distance(T first, T second) override {
-
+        return distanceByIndex(Graph<T>::index(first), Graph<T>::index(second));
     }
 
     int distanceByIndex(int first, int second) override {
+        int listSize = Graph<T>::elementsToIndex.size();
+        int *fathers = new int[listSize];
+        int *length = new int[listSize];
+        bool *used = new bool[listSize];
 
+        if (first * second < 0)
+            return -1; //	There is no nodes with firstNode or secondNode values
+
+        bfs(first, fathers, length, used);
+
+        if (length[second] == INT_MAX)
+            return -1;
+        else
+            return length[second];
     }
 
     bool remove(T value) override {
-        return removeByIndex(index(value));
+        return removeByIndex(Graph<T>::index(value));
     }
 
     bool removeByIndex(short int ind) override {
@@ -108,6 +162,7 @@ public:
 
         // Disconnect node from other nodes
         list[ind].clear();
+        Graph<T>::isUsed[ind] = false;
         return true;
     }
 
@@ -123,9 +178,10 @@ public:
 
     bool add(T value) override {
         // Add new value to elementToIndex vector if it doesn't exist yet
-        if (has(value)) {
+        if (!Graph<T>::has(value)) {
             Graph<T>::elementsToIndex.push_back(value);
-            list.push_back(new vector<short int>);
+            Graph<T>::isUsed.push_back(true);
+            list.push_back(vector<short int>());
             return true;
         }
         return false;
