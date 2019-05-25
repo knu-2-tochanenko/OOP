@@ -42,7 +42,11 @@ public:
 
     // Connects two nodes
     // Returns true if two nodes were connected successfully
-    virtual bool connect(short int from, short int to) = 0;
+    virtual bool connect(T from, T to) = 0;
+
+    // Connects two nodes
+    // Returns true if two nodes were connected successfully
+    virtual bool connectByIndex(short int from, short int to) = 0;
 
     // Adds new element to graph
     virtual bool add(T value) = 0;

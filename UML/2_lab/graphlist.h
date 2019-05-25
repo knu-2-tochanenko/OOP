@@ -111,7 +111,11 @@ public:
         return true;
     }
 
-    bool connect(short int from, short int to) override {
+    bool connect(T from, T to) override {
+        return connectByIndex(Graph<T>::index(from), Graph<T>::index(to));
+    }
+
+    bool connectByIndex(short int from, short int to) override {
         // If indexes are invalid
         if ((from >= Graph<T>::elementsToIndex.size()) || (to >= Graph<T>::elementsToIndex.size()))
             return false;

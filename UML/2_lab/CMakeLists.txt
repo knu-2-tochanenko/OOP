@@ -3,4 +3,4 @@ project(2_lab)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(2_lab main.cpp graph.h graphlist.h graphmatrix.h)
+add_executable(2_lab main.cpp graph.h graphlist.h graphmatrix.h tests.cpp)

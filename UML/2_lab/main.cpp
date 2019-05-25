@@ -1,8 +1,6 @@
-#include <iostream>
-
-#include "graphlist.h"
+/*#include <iostream>
 
 int main() {
 
     return 0;
-}
+}*/
