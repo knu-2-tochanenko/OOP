@@ -22,19 +22,16 @@ protected:
 
     virtual bool bfs(int ind, int fathers[], int length[], bool used[]) = 0;
 
-public:
-    // Checks if graph is connected
-    virtual bool isConnected() = 0;
-
-    // Finds distance between two nodes
-    virtual int distance(T first, T second) = 0;
+    bool pushIfDoesntContain(vector<short int> &vec, short int value) {
+        if (std::find(vec.begin(), vec.end(), value) == vec.end()) {
+            vec.push_back(value);
+            return true;
+        }
+        return false;
+    }
 
     // Finds distance between two nodes
     virtual int distanceByIndex(int first, int second) = 0;
-
-    // Removes element by value
-    // Returns true if element was removed successfully
-    virtual bool remove(T value) = 0;
 
     // Removes element by index
     // Returns true if element was removed successfully
@@ -42,19 +39,7 @@ public:
 
     // Connects two nodes
     // Returns true if two nodes were connected successfully
-    virtual bool connect(T from, T to) = 0;
-
-    // Connects two nodes
-    // Returns true if two nodes were connected successfully
     virtual bool connectByIndex(short int from, short int to) = 0;
-
-    // Adds new element to graph
-    virtual bool add(T value) = 0;
-
-    // Returns true if there is given value
-    bool has(T value) {
-        return std::find(elementsToIndex.begin(), elementsToIndex.end(), value) != elementsToIndex.end();
-    }
 
     // Returns index of value. Use with has function
     short int index(T value) {
@@ -63,6 +48,47 @@ public:
         if (it != elementsToIndex.end())
             ind = std::distance(elementsToIndex.begin(), it);
         return ind;
+    }
+
+public:
+    // Checks if graph is connected
+    bool isConnected() {
+        int listSize = Graph<T>::elementsToIndex.size();
+        int *fathers = new int[listSize];
+        int *length = new int[listSize];
+        bool *used = new bool[listSize];
+
+        bfs(0, fathers, length, used);
+
+        for (int i = 0; i < listSize; i++)
+            if (!used[i])
+                return false;
+        return true;
+    }
+
+    // Finds distance between two nodes
+    int distance(T first, T second) {
+        return distanceByIndex(Graph<T>::index(first), Graph<T>::index(second));
+    }
+
+    // Removes element by value
+    // Returns true if element was removed successfully
+    bool remove(T value) {
+        return removeByIndex(Graph<T>::index(value));
+    }
+
+    // Connects two nodes
+    // Returns true if two nodes were connected successfully
+    bool connect(T from, T to) {
+        return connectByIndex(Graph<T>::index(from), Graph<T>::index(to));
+    }
+
+    // Adds new element to graph
+    virtual bool add(T value) = 0;
+
+    // Returns true if there is given value
+    bool has(T value) {
+        return std::find(elementsToIndex.begin(), elementsToIndex.end(), value) != elementsToIndex.end();
     }
 };
 

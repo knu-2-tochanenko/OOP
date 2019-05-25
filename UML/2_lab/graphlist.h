@@ -13,14 +13,6 @@ private:
     enum Color { white, gray, black };
     vector<vector<short int>> list;
 
-    bool pushIfDoesntContain(vector<short int> &vec, short int value) {
-        if (std::find(vec.begin(), vec.end(), value) == vec.end()) {
-            vec.push_back(value);
-            return true;
-        }
-        return false;
-    }
-
     bool bfs(int ind, int fathers[], int length[], bool used[]) override {
         std::queue<int> nodes;
         int listSize = Graph<T>::elementsToIndex.size();
@@ -36,42 +28,23 @@ private:
         length[ind] = 0;
 
         while (!nodes.empty()) {
-            int cur_vertex = nodes.front();
+            int curVertex = nodes.front();
             nodes.pop();
 
             //	Scan all connected nodes
-            int numberOfNodes = list[cur_vertex].size();
+            int numberOfNodes = list[curVertex].size();
             for (int vectorIterator = 0; vectorIterator < numberOfNodes; vectorIterator++) {
-                int connectedNumber = list[cur_vertex][vectorIterator];
+                int connectedNumber = list[curVertex][vectorIterator];
                 //	If vertex is not visited
                 if (!used[connectedNumber]) {
                     used[connectedNumber] = true;
                     nodes.push(connectedNumber);
-                    length[connectedNumber] = length[cur_vertex] + 1;
-                    fathers[connectedNumber] = cur_vertex;
+                    length[connectedNumber] = length[curVertex] + 1;
+                    fathers[connectedNumber] = curVertex;
                 }
             }
         }
         return true;
-    }
-
-public:
-    bool isConnected() override {
-        int listSize = Graph<T>::elementsToIndex.size();
-        int *fathers = new int[listSize];
-        int *length = new int[listSize];
-        bool *used = new bool[listSize];
-
-        bfs(0, fathers, length, used);
-
-        for (int i = 0; i < listSize; i++)
-            if (!used[i])
-                return false;
-        return true;
-    }
-
-    int distance(T first, T second) override {
-        return distanceByIndex(Graph<T>::index(first), Graph<T>::index(second));
     }
 
     int distanceByIndex(int first, int second) override {
@@ -91,10 +64,6 @@ public:
             return length[second];
     }
 
-    bool remove(T value) override {
-        return removeByIndex(Graph<T>::index(value));
-    }
-
     bool removeByIndex(short int ind) override {
         // If index is invalid
         if (ind > list.size())
@@ -111,19 +80,17 @@ public:
         return true;
     }
 
-    bool connect(T from, T to) override {
-        return connectByIndex(Graph<T>::index(from), Graph<T>::index(to));
-    }
-
     bool connectByIndex(short int from, short int to) override {
         // If indexes are invalid
         if ((from >= Graph<T>::elementsToIndex.size()) || (to >= Graph<T>::elementsToIndex.size()))
             return false;
         // Connect if doesn't connected
-        pushIfDoesntContain(list[from], to);
-        pushIfDoesntContain(list[to], from);
+        Graph<T>::pushIfDoesntContain(list[from], to);
+        Graph<T>::pushIfDoesntContain(list[to], from);
         return true;
     }
+
+public:
 
     bool add(T value) override {
         // Add new value to elementToIndex vector if it doesn't exist yet
@@ -133,6 +100,7 @@ public:
             list.push_back(vector<short int>());
             return true;
         }
+        Graph<T>::isUsed[Graph<T>::index(value)] = true;
         return false;
     }
 };
