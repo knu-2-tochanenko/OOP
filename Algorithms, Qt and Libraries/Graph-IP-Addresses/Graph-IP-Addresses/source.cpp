@@ -25,7 +25,7 @@ int main() {
 	graph.getInformationString();
 	//*/
 
-	/* Place one more slash on the beginning of this line in order to check the work of checking for subnet
+	//* Place one more slash on the beginning of this line in order to check the work of checking for subnet
 	tvv::IpAddress address;
 	address.generateRandomIpV4();
 	tvv::IpAddress host;
