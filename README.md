@@ -6,7 +6,7 @@
 * [Note App (lab 2)](#note-app-lab-2)
 * [JSON to PDF converting (lab 3)](#json-to-pdf-converting-lab-3)
 ### 2nd Term
-* [Medium UML Diagrams](#medium-uml-diagrams)
+* [Medium UML Diagrams (lab 1.1)](#medium-uml-diagrams-lab-1)
 
 ## Graph and IP Addresses (lab 1)
 [Go to code](https://github.com/knu-2nd-tochanenko/OOP/tree/master/Algorithms%2C%20Qt%20and%20Libraries/Graph-IP-Addresses)\
@@ -68,8 +68,13 @@ This project uses listed third-party libraries:
     - Download latest [json.hpp](https://github.com/nlohmann/json/releases) file
 5. And now you are good to go!
 
-## Medium UML Diagrams
+## Medium UML Diagrams (lab 1.1)
 [Visual Paradigm Project](https://github.com/knu-2nd-tochanenko/OOP/tree/master/UML/1_lab)\
 [Rendered Diagrams (JPG)](https://github.com/knu-2nd-tochanenko/OOP/tree/master/UML/1_lab/images)\
 The first project of second (fourth) term.\
 The task is to create all of 14 diagrams of UML 2.0 standard for [Medium](https://medium.com)
+
+## Refactoring (lab 1.2)
+[Go to code](https://github.com/knu-2nd-tochanenko/OOP/tree/master/UML/2_lab)\
+Refactoring of [Graph and IP Addresses lab](https://github.com/knu-2nd-tochanenko/OOP/tree/master/Algorithms%2C%20Qt%20and%20Libraries/Graph-IP-Addresses)\
+This project uses third-party Unit Test library [Catch2](https://github.com/catchorg/Catch2)
