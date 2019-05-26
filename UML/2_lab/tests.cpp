@@ -72,6 +72,26 @@ TEST_CASE ("String parser", "[parser]") {
     }
 }
 
+TEST_CASE("Ip", "[ip]") {
+    IP ipV4("127.0.0.1");
+    IP ipV6("0:0:0:0:0:ffff:7f00:1");
+    SECTION("Write V4 and V6 from V4") {
+        REQUIRE(ipV4.toV4() == "127.0.0.1");
+        REQUIRE(ipV4.toV6() == "0:0:0:0:0:ffff:7f00:1");
+    }
+    SECTION("Write V4 and V6 from V6") {
+        REQUIRE(ipV6.toV4() == "127.0.0.1");
+        REQUIRE(ipV6.toV6() == "0:0:0:0:0:ffff:7f00:1");
+    }
+    SECTION("Test for subnet") {
+        IP ipV4_2("127.0.0.120");
+        ipV4.mask(8);
+        REQUIRE(ipV4.hasIP(ipV4_2));
+        ipV4.mask(1);
+        REQUIRE(!ipV4.hasIP(ipV4_2));
+    }
+}
+
 TEST_CASE("Distance between nodes", "[distance]") {
     GraphList<char> gl;
     gl.add('a');
