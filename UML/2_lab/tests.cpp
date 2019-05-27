@@ -76,17 +76,17 @@ TEST_CASE ("String parser", "[parser]") {
 }
 //*/
 
-//*
+///*
 TEST_CASE("Ip", "[ip]") {
     IP ipV4("127.0.0.1");
-    IP ipV6("0:0:0:0:0:ffff:7f00:1");
+    IP ipV6("0:0:0:0:0:0:7f00:1");
     SECTION("Write V4 and V6 from V4") {
         REQUIRE(ipV4.toV4() == "127.0.0.1");
-        REQUIRE(ipV4.toV6() == "0:0:0:0:0:ffff:7f00:1");
+        REQUIRE(ipV4.toV6() == "0:0:0:0:0:0:7f00:1");
     }
     SECTION("Write V4 and V6 from V6") {
         REQUIRE(ipV6.toV4() == "127.0.0.1");
-        REQUIRE(ipV6.toV6() == "0:0:0:0:0:ffff:7f00:1");
+        REQUIRE(ipV6.toV6() == "0:0:0:0:0:0:7f00:1");
     }
     SECTION("Test for subnet") {
         IP ipV4_2("127.0.0.120");
@@ -136,6 +136,48 @@ TEST_CASE("Distance between nodes", "[distance]") {
 
     REQUIRE(gm.distance('a', 'd') == 2);
     REQUIRE(gm.distance('g', 'f') == 1);
+    REQUIRE(!gm.isConnected());
+}
+//*/
+
+//*
+TEST_CASE("IP and Graphs", "[ip][graphs]") {
+    GraphList<IP> gl;
+    gl.add(IP("127.0.0.1"));
+    gl.add(IP("127.0.0.2"));
+    gl.add(IP("127.0.0.3"));
+    gl.add(IP("127.0.0.4"));
+    gl.add(IP("127.0.0.5"));
+    gl.add(IP("127.0.0.6"));
+    gl.add(IP("127.0.0.7"));
+    gl.connect(IP("127.0.0.1"), IP("127.0.0.2"));
+    gl.connect(IP("127.0.0.2"), IP("127.0.0.3"));
+    gl.connect(IP("127.0.0.3"), IP("127.0.0.4"));
+    gl.connect(IP("127.0.0.1"), IP("127.0.0.5"));
+    gl.connect(IP("127.0.0.5"), IP("127.0.0.4"));
+    gl.connect(IP("127.0.0.6"), IP("127.0.0.7"));
+
+    REQUIRE(gl.distance(IP("127.0.0.1"), IP("127.0.0.4")) == 2);
+    REQUIRE(gl.distance(IP("127.0.0.7"), IP("127.0.0.6")) == 1);
+    REQUIRE(!gl.isConnected());
+
+    GraphList<IP> gm;
+    gm.add(IP("127.0.0.1"));
+    gm.add(IP("127.0.0.2"));
+    gm.add(IP("127.0.0.3"));
+    gm.add(IP("127.0.0.4"));
+    gm.add(IP("127.0.0.5"));
+    gm.add(IP("127.0.0.6"));
+    gm.add(IP("127.0.0.7"));
+    gm.connect(IP("127.0.0.1"), IP("127.0.0.2"));
+    gm.connect(IP("127.0.0.2"), IP("127.0.0.3"));
+    gm.connect(IP("127.0.0.3"), IP("127.0.0.4"));
+    gm.connect(IP("127.0.0.1"), IP("127.0.0.5"));
+    gm.connect(IP("127.0.0.5"), IP("127.0.0.4"));
+    gm.connect(IP("127.0.0.6"), IP("127.0.0.7"));
+
+    REQUIRE(gm.distance(IP("127.0.0.1"), IP("127.0.0.4")) == 2);
+    REQUIRE(gm.distance(IP("127.0.0.7"), IP("127.0.0.6")) == 1);
     REQUIRE(!gm.isConnected());
 }
 //*/

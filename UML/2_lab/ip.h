@@ -37,7 +37,7 @@ private:
             32768
     };
 
-    unsigned short int address[8];
+    unsigned short int *address;
     unsigned short int ipMask;
 
     bool isV4() {
@@ -50,13 +50,15 @@ private:
 public:
 
     IP() {
-        for (unsigned short & octet : address)
-            octet = 0;
+        this->address = new unsigned short int[8];
+        for (int i = 0; i < 8; i++)
+            this->address[i] = 0;
         ipMask = 0;
     }
 
     IP(string str) {
-        unsigned short *res = IpConverter::fromString(std::move(str));
+        unsigned short int *res = IpConverter::fromString(std::move(str));
+        this->address = res;
         ipMask = 0;
     }
 
@@ -95,6 +97,18 @@ public:
     string toV6() {
         return IpConverter::toV6(address);
     }
+
+    friend bool operator== (const IP &lhs, const IP &rhs);
+
 };
+
+bool operator==(const IP &lhs, const IP &rhs) {
+    for (int i = 0; i < 8; i++) {
+        if (lhs.address[i] != rhs.address[i])
+            return false;
+    }
+    return true;
+}
+
 
 #endif //INC_2_LAB_IP_H

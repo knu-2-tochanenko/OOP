@@ -60,6 +60,7 @@ private:
         newMatrix[elements] = new short int[newElements];
         for (int i = 0; i < newElements; i++)
             newMatrix[elements][i] = 0;
+        matrix = newMatrix;
     }
 
     int distanceByIndex(int first, int second) override {
@@ -109,11 +110,11 @@ public:
     bool add(T value) override {
         // Add new value to elementToIndex vector if it doesn't exist yet
         if (!Graph<T>::has(value)) {
+            // Resize matrix
+            expandMatrix();
             Graph<T>::elementsToIndex.push_back(value);
             Graph<T>::isUsed.push_back(true);
 
-            // Resize matrix
-            expandMatrix();
             return true;
         }
         Graph<T>::isUsed[Graph<T>::index(value)] = true;

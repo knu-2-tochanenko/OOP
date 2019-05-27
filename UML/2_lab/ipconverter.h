@@ -47,11 +47,13 @@ public:
         unsigned short int *newAddress;
         newAddress = new unsigned short int[8];
         for (int i = 0; i < 8; i++)
-            newAddress = 0;
+            newAddress[i] = 0;
         if (ip.find('.') != std::string::npos) {
             vector<string> res = StringParser::separate(ip, '.');
-            for (int i = 0; i < res.size(); i++)
-                newAddress[4 + i] = std::stoi(res[i]);
+            for (int i = 0; i < 2; i++) {
+                int num = (std::stoi(res[i * 2]) << 8) | std::stoi(res[i * 2 + 1]);
+                newAddress[6 + i] = num;
+            }
         }
         else if (ip.find(':') != std::string::npos) {
             vector<string> res = StringParser::separate(ip, ':');
