@@ -10,7 +10,6 @@
 template <typename T>
 class GraphMatrix : public Graph<T> {
 private:
-    enum Color { white, gray, black };
     short int **matrix;
 
     bool bfs(int ind, int fathers[], int length[], bool used[]) override {

@@ -10,7 +10,6 @@
 template <typename T>
 class GraphList : public Graph<T> {
 private:
-    enum Color { white, gray, black };
     vector<vector<short int>> list;
 
     bool bfs(int ind, int fathers[], int length[], bool used[]) override {

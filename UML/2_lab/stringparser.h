@@ -25,6 +25,7 @@ public:
             else
                 sub += str[i];
         }
+        res.push_back(sub);
         return res;
     }
 };

@@ -17,21 +17,24 @@
 using std::vector;
 using std::string;
 
+//*
 TEST_CASE("Hex converter", "[hex][converter]") {
     SECTION("Int to HEX") {
-        REQUIRE(HexConverter::toHex(15) == "F");
+        REQUIRE(HexConverter::toHex(15) == "f");
         REQUIRE(HexConverter::toHex(0) == "0");
         REQUIRE(HexConverter::toHex(8) == "8");
-        REQUIRE(HexConverter::toHex(2564) == "A04");
+        REQUIRE(HexConverter::toHex(2564) == "a04");
     }
     SECTION("HEX to Int") {
-        REQUIRE(HexConverter::toInt("F") == 15);
+        REQUIRE(HexConverter::toInt("f") == 15);
         REQUIRE(HexConverter::toInt("0") == 0);
         REQUIRE(HexConverter::toInt("8") == 8);
-        REQUIRE(HexConverter::toInt("A04") == 2564);
+        REQUIRE(HexConverter::toInt("a04") == 2564);
     }
 }
+//*/
 
+//*
 TEST_CASE ("String parser", "[parser]") {
     vector<string> first;
     SECTION("127.0.0.1") {
@@ -71,7 +74,9 @@ TEST_CASE ("String parser", "[parser]") {
         REQUIRE(StringParser::separate("0:0:0:0:0:0:0:0", ':') == first);
     }
 }
+//*/
 
+//*
 TEST_CASE("Ip", "[ip]") {
     IP ipV4("127.0.0.1");
     IP ipV6("0:0:0:0:0:ffff:7f00:1");
@@ -91,7 +96,9 @@ TEST_CASE("Ip", "[ip]") {
         REQUIRE(!ipV4.hasIP(ipV4_2));
     }
 }
+//*/
 
+//*
 TEST_CASE("Distance between nodes", "[distance]") {
     GraphList<char> gl;
     gl.add('a');
@@ -131,3 +138,4 @@ TEST_CASE("Distance between nodes", "[distance]") {
     REQUIRE(gm.distance('g', 'f') == 1);
     REQUIRE(!gm.isConnected());
 }
+//*/
