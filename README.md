@@ -79,3 +79,15 @@ The task is to create all of 14 diagrams of UML 2.0 standard for [Medium](https:
 [Go to code](https://github.com/knu-2nd-tochanenko/OOP/tree/master/UML/2_lab)\
 Refactoring of [Graph and IP Addresses lab](https://github.com/knu-2nd-tochanenko/OOP/tree/master/Algorithms%2C%20Qt%20and%20Libraries/Graph-IP-Addresses)\
 This project uses third-party Unit Test library [Catch2](https://github.com/catchorg/Catch2)
+
+## Review (lab 1.3)
+
+* [1.1 Богдан Филоненко](https://github.com/knu-2nd-tochanenko/OOP/blob/master/UML/3_lab/1_filonenko.md)
+* [1.1 Тимофій Шараєв](https://github.com/knu-2nd-tochanenko/OOP/blob/master/UML/3_lab/1_sharayev.md)
+* [1.2 Кравчук Павло](https://github.com/knu-2nd-tochanenko/OOP/blob/master/UML/3_lab/2_kravchuk.md)
+* [1.2 Микита Олійник](https://github.com/knu-2nd-tochanenko/OOP/blob/master/UML/3_lab/2_oliinyk.md)
+
+## Tree Visualization (lab 2)
+[Go to code](https://github.com/JustTaya/TreeVis)\
+Tree visualization website made by Sergei Yarema, Taya Velychko, Vladislav Tochanenko and Mykyta Oliinyk.\
+You can test it yourself by visiting [this beta version](http://wiki.tochanenko.com/tv/)
