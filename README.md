@@ -8,6 +8,8 @@
 ### 2nd Term
 * [Medium UML Diagrams (lab 1.1)](#medium-uml-diagrams-lab-1.1)
 * [Refactoring (lab 1.2)](#refactoring-lab-1.2)
+* [Review (lab 1.3)](#review-lab-1.3)
+* [Tree Visualization (lab 2)](#tree-visualization-lab-2)
 
 ## Graph and IP Addresses (lab 1)
 [Go to code](https://github.com/knu-2nd-tochanenko/OOP/tree/master/Algorithms%2C%20Qt%20and%20Libraries/Graph-IP-Addresses)\
@@ -81,7 +83,6 @@ Refactoring of [Graph and IP Addresses lab](https://github.com/knu-2nd-tochanenk
 This project uses third-party Unit Test library [Catch2](https://github.com/catchorg/Catch2)
 
 ## Review (lab 1.3)
-
 * [1.1 Богдан Филоненко](https://github.com/knu-2nd-tochanenko/OOP/blob/master/UML/3_lab/1_filonenko.md)
 * [1.1 Тимофій Шараєв](https://github.com/knu-2nd-tochanenko/OOP/blob/master/UML/3_lab/1_sharayev.md)
 * [1.2 Кравчук Павло](https://github.com/knu-2nd-tochanenko/OOP/blob/master/UML/3_lab/2_kravchuk.md)
